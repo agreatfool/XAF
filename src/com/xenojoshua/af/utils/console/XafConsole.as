@@ -13,6 +13,20 @@ package com.xenojoshua.af.utils.console
 	{
 		private static var _console:XafConsole;
 		
+		public static var DEBUG:int   = 0;
+		public static var INFO:int    = 1;
+		public static var NOTICE:int  = 2;
+		public static var WARNING:int = 3;
+		public static var ERROR:int   = 4;
+		private static var LOG_LEVELS:Object = {
+			0: 'DEBUG',
+			1: 'INFO',
+			2: 'NOTICE',
+			3: 'WARNING',
+			4: 'ERROR'
+		};
+		private var _logLevel:int = 0; // default debug level
+		
 		private  var _stage:Stage;
 		
 		internal var _consoleField:TextField; 
@@ -47,21 +61,24 @@ package com.xenojoshua.af.utils.console
 		
 		/**
 		 * Initialize console instance.
+		 * @param Stage stage
+		 * @param int logLevel
 		 * @return void
 		 */
-		public static function startup(stage:Stage):void
+		public static function startup(stage:Stage, logLevel:int = 0):void
 		{
 			if (!XafConsole._console) {
-				XafConsole._console = new XafConsole(stage);
+				XafConsole._console = new XafConsole(stage, logLevel);
 			}
 		}
 		
 		/**
 		 * Constructor. Draw everything and add into root stage.
 		 * @param Stage stage
+		 * @param int logLevel
 		 * @return void
 		 */
-		public function XafConsole(stage:Stage)
+		public function XafConsole(stage:Stage, logLevel:int)
 		{
 			super();
 			this._stage = stage;
@@ -70,6 +87,43 @@ package com.xenojoshua.af.utils.console
 			this.initSwitchBtn();
 			this.initConsole();
 			this._stage.addChild(this);
+			this._logLevel = logLevel;
+		}
+		
+		/**
+		 * Log message into the console.
+		 * @param int logLevel
+		 * @param String msg
+		 * @return void
+		 */
+		public function log(logLevel:int, msg:String):void
+		{
+			if (logLevel >= this._logLevel) {
+				this._consoleField.appendText("\n[" + this.getLogLevelName(logLevel) + "]: " + msg);
+			}
+			this._consoleField.scrollV = this._consoleField.maxScrollV;
+		}
+		
+		/**
+		 * Get log level name.
+		 * @param int logLevel
+		 * @return String name
+		 */
+		private function getLogLevelName(logLevel:int):String
+		{
+			return XafConsole.LOG_LEVELS[logLevel];
+		}
+		
+		/**
+		 * Set console log level.
+		 * @param int logLevel
+		 * @return void
+		 */
+		public function setLogLevel(logLevel:int):void
+		{
+			if (XafConsole.LOG_LEVELS.hasOwnProperty(logLevel)) {
+				this._logLevel = logLevel;
+			}
 		}
 		
 		/**
@@ -192,17 +246,6 @@ package com.xenojoshua.af.utils.console
 		{
 			this._isConsoleVisible = !this._isConsoleVisible;
 			this._consoleField.visible = this._isConsoleVisible;
-		}
-		
-		/**
-		 * Log message into the console.
-		 * @param String msg
-		 * @return void
-		 */
-		public function log(msg:String):void
-		{
-			this._consoleField.appendText("\n" + msg);
-			this._consoleField.scrollV = this._consoleField.maxScrollV;
 		}
 	}
 }

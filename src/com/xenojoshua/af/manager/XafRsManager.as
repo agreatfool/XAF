@@ -85,7 +85,7 @@ package com.xenojoshua.af.manager
 			if (this._loaders.hasOwnProperty(name)) {
 				loader = this._loaders[name];
 			} else {
-				XafConsole.instance.log('SWFLoader with name "' + name + '" not registered in the XafRsManager!');
+				XafConsole.instance.log(XafConsole.ERROR, 'SWFLoader with name "' + name + '" not registered in the XafRsManager!');
 			}
 			
 			return loader;

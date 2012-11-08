@@ -16,7 +16,7 @@ package com.xenojoshua.af.manager
 			this._screenLayers = new Dictionary();
 		}
 		
-		public static function instance():XafScreenManager
+		public static function get instance():XafScreenManager
 		{
 			if (!XafScreenManager._mgr) {
 				XafScreenManager._mgr = new XafScreenManager();

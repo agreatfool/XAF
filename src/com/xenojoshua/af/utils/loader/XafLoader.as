@@ -89,17 +89,17 @@ package com.xenojoshua.af.utils.loader
 		
 		private function onComplete():void
 		{
-			XafConsole.instance.log("Resources loading complete!");
+			XafConsole.instance.log("Resources loading completed!");
 		}
 		
 		private function onProgress():void
 		{
-			
+			XafConsole.instance.log("Resources bytes loaded: " + this._loader.bytesLoaded);
 		}
 		
 		private function onError():void
 		{
-			
+			XafConsole.instance.log("Resources loading failed!");
 		}
 		
 		public static function buildLoaderVars(

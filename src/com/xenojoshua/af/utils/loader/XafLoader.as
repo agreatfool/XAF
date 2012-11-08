@@ -1,5 +1,6 @@
 package com.xenojoshua.af.utils.loader
 {
+	import com.greensock.events.LoaderEvent;
 	import com.greensock.loading.LoaderMax;
 	import com.greensock.loading.SWFLoader;
 	import com.greensock.loading.XMLLoader;
@@ -56,7 +57,7 @@ package com.xenojoshua.af.utils.loader
 		public function load(urls:Array, vars:Object = null):XafLoader
 		{
 			if (null == vars) {
-				vars = XafLoader.buildLoaderVars(this.onComplete, this.onProgress, this.onError);
+				vars = this.buildLoaderVars(this.onComplete, this.onProgress, this.onError);
 			}
 			this._loader = null; // reset old loader
 			
@@ -87,22 +88,49 @@ package com.xenojoshua.af.utils.loader
 			return this._loader.getContent(name) as XML;
 		}
 		
-		private function onComplete():void
+		/**
+		 * Default onComplete handler.
+		 * @param LoaderEvent e
+		 * @return void
+		 */
+		private function onComplete(e:LoaderEvent):void
 		{
-			XafConsole.instance.log(XafConsole.INFO, "Resources loading completed!");
+			XafConsole.instance.log(XafConsole.INFO, "Resources loading completed! " + e.target + " is complete!");
 		}
 		
-		private function onProgress():void
+		/**
+		 * Default onProgress handler.
+		 * @param LoaderEvent e
+		 * @return void
+		 */
+		private function onProgress(e:LoaderEvent):void
 		{
-			XafConsole.instance.log(XafConsole.INFO, "Resources bytes loaded: " + this._loader.bytesLoaded);
+			//XafConsole.instance.log(XafConsole.INFO, "Resources bytes loaded: " + this._loader.bytesLoaded);
+			//XafConsole.instance.log(XafConsole.INFO, "Resource loading progress: " + e.target.progress);
 		}
 		
-		private function onError():void
+		/**
+		 * Default onError handler.
+		 * @param LoaderEvent e
+		 * @return void
+		 */
+		private function onError(e:LoaderEvent):void
 		{
-			XafConsole.instance.log(XafConsole.INFO, "Resources loading failed!");
+			XafConsole.instance.log(XafConsole.INFO, "Resources loading failed! Error occured with " + e.target + ": " + e.text);
 		}
 		
-		public static function buildLoaderVars(
+		/**
+		 * Build LoaderMax vars.
+		 * @param Function onComplete
+		 * @param Function onProgress
+		 * @param Function onError
+		 * @param String name default "XafLoader"
+		 * @param Boolean auditSize default false
+		 * @param uint maxConnections default 10
+		 * @param Boolean skipFailed default false
+		 * @return Object vars
+		 */
+		public function buildLoaderVars(
 			onComplete:Function,
 			onProgress:Function,
 			onError:Function,
@@ -114,9 +142,9 @@ package com.xenojoshua.af.utils.loader
 		{
 			var vars:Object = {};
 			
-			vars["onComplete"]     = onProgress;
-			vars["onProgress"]     = onProgress;
-			vars["onError"]        = onError;
+			vars["onComplete"]     = (onComplete == null) ? this.onComplete : onComplete;
+			vars["onProgress"]     = (onProgress == null) ? this.onProgress : onProgress;
+			vars["onError"]        = (onError == null) ? this.onError : onError;
 			vars["auditSize"]      = auditSize;
 			vars["name"]           = name;
 			vars["maxConnections"] = maxConnections;

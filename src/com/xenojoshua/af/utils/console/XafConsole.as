@@ -99,7 +99,9 @@ package com.xenojoshua.af.utils.console
 		public function log(logLevel:int, msg:String):void
 		{
 			if (logLevel >= this._logLevel) {
-				this._consoleField.appendText("\n[" + this.getLogLevelName(logLevel) + "]: " + msg);
+				msg = "[" + this.getLogLevelName(logLevel) + "]: " + msg;
+				this._consoleField.appendText("\n[" + msg);
+				trace(msg);
 			}
 			this._consoleField.scrollV = this._consoleField.maxScrollV;
 		}

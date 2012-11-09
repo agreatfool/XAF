@@ -1,6 +1,7 @@
 package com.xenojoshua.af.utils.loader
 {
 	import com.greensock.events.LoaderEvent;
+	import com.greensock.loading.DataLoader;
 	import com.greensock.loading.LoaderMax;
 	import com.greensock.loading.SWFLoader;
 	import com.greensock.loading.XMLLoader;
@@ -50,6 +51,7 @@ package com.xenojoshua.af.utils.loader
 		
 		/**
 		 * Initialize one LoaderMax & start loading.
+		 * If file name is not ended with "swf" | "xml", it would be loaded with DataLoader.
 		 * @param Array urls array of urls to be loaded
 		 * @param Object vars default null, please also see LoaderMax constructor
 		 * @return XafLoader loader
@@ -61,7 +63,28 @@ package com.xenojoshua.af.utils.loader
 			}
 			this._loader = null; // reset old loader
 			
+			var dataUrls:Array = [];
+			for (var key:String in urls) {
+				var url:String = urls[key];
+				var dotPos:int = url.lastIndexOf('.');
+				if (-1 != dotPos) {
+					var extension:String = url.substr(dotPos + 1);
+					if (extension.toLowerCase() == 'swf'
+						|| extension.toLowerCase() == 'xml') {
+						continue;
+					}
+				}
+				dataUrls.push(url);
+				urls.splice(key, 1);
+			}
+			
 			var loader:LoaderMax = LoaderMax.parse(urls, vars);
+			if (dataUrls) {
+				for each (var dataUrl:String in dataUrls) {
+					loader.append(new DataLoader(dataUrl));
+				}
+			}
+			
 			this._loader = loader;
 			this._loader.load();
 			
@@ -86,6 +109,16 @@ package com.xenojoshua.af.utils.loader
 		public function getXml(name:String):XML
 		{
 			return this._loader.getContent(name) as XML;
+		}
+		
+		/**
+		 * Get json loaded in function "load".
+		 * @param String name
+		 * @return Ojbect json
+		 */
+		public function getJson(name:String):Object
+		{
+			return JSON.parse(this._loader.getContent(name));
 		}
 		
 		/**

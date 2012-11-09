@@ -57,7 +57,7 @@ package com.xenojoshua.af.utils.loader
 		public function load(urls:Array, vars:Object = null):XafLoader
 		{
 			if (null == vars) {
-				vars = this.buildLoaderVars(this.onComplete, this.onProgress, this.onError);
+				vars = this.buildLoaderVars();
 			}
 			this._loader = null; // reset old loader
 			
@@ -131,9 +131,9 @@ package com.xenojoshua.af.utils.loader
 		 * @return Object vars
 		 */
 		public function buildLoaderVars(
-			onComplete:Function,
-			onProgress:Function,
-			onError:Function,
+			onComplete:Function = null,
+			onProgress:Function = null,
+			onError:Function    = null,
 			name:String         = "XafLoader",
 			auditSize:Boolean   = false,
 			maxConnections:uint = 10,

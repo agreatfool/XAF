@@ -1,4 +1,4 @@
-package com.xenojoshua.af.manager
+package com.xenojoshua.af.display.screen
 {
 	import com.xenojoshua.af.constant.XafConst;
 	import com.xenojoshua.af.utils.console.XafConsole;

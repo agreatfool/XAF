@@ -1,4 +1,4 @@
-package com.xenojoshua.af.manager
+package com.xenojoshua.af.resource
 {
 	import com.greensock.loading.SWFLoader;
 	import com.xenojoshua.af.utils.console.XafConsole;

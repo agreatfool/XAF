@@ -2,7 +2,7 @@ package com.xenojoshua.af.utils.mask
 {
 	import com.xenojoshua.af.config.XafConfig;
 	import com.xenojoshua.af.constant.XafConst;
-	import com.xenojoshua.af.manager.XafScreenManager;
+	import com.xenojoshua.af.display.screen.XafScreenManager;
 	
 	import flash.display.DisplayObject;
 	import flash.display.DisplayObjectContainer;

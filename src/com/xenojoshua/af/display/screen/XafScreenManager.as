@@ -1,6 +1,7 @@
 package com.xenojoshua.af.display.screen
 {
 	import com.xenojoshua.af.constant.XafConst;
+	import com.xenojoshua.af.exception.XafException;
 	import com.xenojoshua.af.utils.console.XafConsole;
 	
 	import flash.display.DisplayObjectContainer;
@@ -53,11 +54,10 @@ package com.xenojoshua.af.display.screen
 				if (rootLayer) {
 					rootLayer.addChild(layer);
 				} else {
-					XafConsole.instance.log(XafConsole.ERROR, 'Root layer should be registered before other layers!');
+					throw new XafException(10000); // root layer not registered
 				}
 			} else if (null == layer) { // root layer & layer is null INVALID
-				XafConsole.instance.log(XafConsole.ERROR, 'Root layer cannot be registered as empty display object container!');
-				return null;
+				throw new XafException(10001); // root layer registered as null
 			}
 			this._screenLayers[name] = layer;
 			
@@ -74,7 +74,7 @@ package com.xenojoshua.af.display.screen
 			var layer:DisplayObjectContainer = null;
 			
 			if (!this._screenLayers.hasOwnProperty(name)) {
-				XafConsole.instance.log(XafConsole.ERROR, 'Screen layer "' + name + '" not registered!');
+				throw new XafException(10002); // layer not registered
 			} else {
 				layer = this._screenLayers[name];
 			}
@@ -93,7 +93,7 @@ package com.xenojoshua.af.display.screen
 			var layer:DisplayObjectContainer = null;
 			
 			if (!this._screenLayers.hasOwnProperty(name)) {
-				XafConsole.instance.log(XafConsole.ERROR, 'Screen layer "' + name + '" not registered!');
+				throw new XafException(10002); // layer not registered
 			} else {
 				layer = this._screenLayers[name];
 				layer.visible = visibility;

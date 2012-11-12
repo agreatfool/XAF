@@ -5,9 +5,9 @@ package com.xenojoshua.af.constant
 		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 		//-* SCREEN LAYER PRE DEFINED
 		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-		public static var SCREEN_ROOT:String  = 'root';
-		public static var SCREEN_GAME:String  = 'game';
-		public static var SCREEN_UI:String    = 'ui';
-		public static var SCREEN_POPUP:String = 'popup';
+		public static const SCREEN_ROOT:String  = 'root';
+		public static const SCREEN_GAME:String  = 'game';
+		public static const SCREEN_UI:String    = 'ui';
+		public static const SCREEN_POPUP:String = 'popup';
 	}
 }

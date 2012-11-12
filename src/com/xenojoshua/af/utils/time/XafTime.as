@@ -25,7 +25,6 @@ package com.xenojoshua.af.utils.time
 			var pattern:RegExp = /(\d\d\d\d)-(\d\d)-(\d\d) (\d\d):(\d\d):(\d\d)/; 
 			var timeParts:Array = pattern.exec(timeString);
 			
-			trace(timeParts);
 			if (null != timeParts) { // null means RegExp match failed, time string invalid
 				date.setFullYear(timeParts[1]);
 				date.setMonth(timeParts[2] - 1);

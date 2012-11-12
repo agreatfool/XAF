@@ -13,12 +13,12 @@ package com.xenojoshua.af.utils.console
 	{
 		private static var _console:XafConsole;
 		
-		public static var DEBUG:int   = 0;
-		public static var INFO:int    = 1;
-		public static var NOTICE:int  = 2;
-		public static var WARNING:int = 3;
-		public static var ERROR:int   = 4;
-		private static var LOG_LEVELS:Object = {
+		public static const DEBUG:int   = 0;
+		public static const INFO:int    = 1;
+		public static const NOTICE:int  = 2;
+		public static const WARNING:int = 3;
+		public static const ERROR:int   = 4;
+		private static const LOG_LEVELS:Object = {
 			0: 'DEBUG',
 			1: 'INFO',
 			2: 'NOTICE',
@@ -100,7 +100,7 @@ package com.xenojoshua.af.utils.console
 		{
 			if (logLevel >= this._logLevel) {
 				msg = "[" + this.getLogLevelName(logLevel) + "]: " + msg;
-				this._consoleField.appendText("\n[" + msg);
+				this._consoleField.appendText("\n" + msg);
 				trace(msg);
 			}
 			this._consoleField.scrollV = this._consoleField.maxScrollV;

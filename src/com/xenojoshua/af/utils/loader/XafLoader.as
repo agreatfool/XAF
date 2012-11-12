@@ -11,8 +11,8 @@ package com.xenojoshua.af.utils.loader
 	
 	public class XafLoader
 	{
-		public static var TYPE_SWF:String = "swf";
-		public static var TYPE_XML:String = "xml";
+		public static const TYPE_SWF:String = "swf";
+		public static const TYPE_XML:String = "xml";
 		
 		private static var _xafLoader:XafLoader;
 		

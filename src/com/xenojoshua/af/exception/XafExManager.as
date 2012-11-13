@@ -5,9 +5,11 @@ package com.xenojoshua.af.exception
 		private static var _mgr:XafExManager;
 		
 		private var _msg:Object = { // <exceptionId:int, message:String>
-			10000: 'Root layer should be registered before other layers!',
-			10001: 'Root layer cannot be registered as empty display object container!',
-			10002: 'Screen layer specified not registered!'
+			10000: 'XafScreenManager: Root layer should be registered before other layers!',
+			10001: 'XafScreenManager: Root layer cannot be registered as empty display object container!',
+			10002: 'XafScreenManager: Screen layer specified not registered!',
+			10003: 'XafRsManager: Resource url not defined!',
+			10004: 'XafRsManager: Resource type invalid!'
 		};
 		
 		/**
@@ -33,11 +35,11 @@ package com.xenojoshua.af.exception
 		}
 		
 		/**
-		 * Add more messages into manager.
+		 * Add more exception messages into manager.
 		 * @param Object messages
 		 * @return void
 		 */
-		public function registerMsg(messages:Object):void
+		public function registerMessages(messages:Object):void
 		{
 			if (messages) {
 				for (var key:String in messages) {

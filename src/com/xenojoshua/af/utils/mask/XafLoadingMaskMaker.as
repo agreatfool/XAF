@@ -27,7 +27,7 @@ package com.xenojoshua.af.utils.mask
 		public static function get instance():XafLoadingMaskMaker
 		{
 			if (!XafLoadingMaskMaker._maker) {
-				XafConsole.instance.log(XafConsole.ERROR, 'XafLoadingMaskMaker has not been "startup"ed yet!');
+				XafConsole.instance.log(XafConsole.ERROR, 'XafLoadingMaskMaker: XafLoadingMaskMaker has not been "startup"ed yet!');
 			}
 			return XafLoadingMaskMaker._maker;
 		}

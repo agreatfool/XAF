@@ -39,7 +39,7 @@ package com.xenojoshua.af.utils.mask
 		
 		/**
 		 * Make a mask.
-		 * Purpose1: Add a background mask after the DisplayObject "display", if "display" has a parent.
+		 * Purpose1: Add a background mask under the DisplayObject "display", if "display" has a parent.
 		 * Purpose2: Add a global mask before everything on the game screen layer, if "display" has no parent.
 		 * @param DisplayObject display
 		 * @param Number alpha

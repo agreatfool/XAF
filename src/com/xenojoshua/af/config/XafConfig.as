@@ -4,6 +4,9 @@ package com.xenojoshua.af.config
 	{
 		private static var _config:XafConfig;
 		
+		private var _mediaHost:String;
+		private var _apiHost:String;
+		
 		private var _stageWidth:uint;
 		private var _stageHeight:uint;
 		
@@ -21,42 +24,16 @@ package com.xenojoshua.af.config
 		
 		public function XafConfig() {}
 		
-		/**
-		 * Set stage width.
-		 * @param uint width
-		 * @return void
-		 */
-		public function set stageWidth(width:uint):void
-		{
-			this._stageWidth = width;
-		}
+		public function set mediaHost(host:String):void { this._mediaHost = host; }
+		public function get mediaHost():String { return this._mediaHost; }
 		
-		/**
-		 * Get stage width.
-		 * @return uint _stageWidth
-		 */
-		public function get stageWidth():uint
-		{
-			return this._stageWidth;
-		}
+		public function set apiHost(host:String):void { this._apiHost = host; }
+		public function get apiHost():String { return this._apiHost; }
 		
-		/**
-		 * Set stage height.
-		 * @param uint height
-		 * @return void
-		 */
-		public function set stageHeight(height:uint):void
-		{
-			this._stageHeight = height;
-		}
+		public function set stageWidth(width:uint):void { this._stageWidth = width; }
+		public function get stageWidth():uint { return this._stageWidth; }
 		
-		/**
-		 * Get stage height.
-		 * @return uint _stageHeight
-		 */
-		public function get stageHeight():uint
-		{
-			return this._stageHeight;
-		}
+		public function set stageHeight(height:uint):void { this._stageHeight = height; }
+		public function get stageHeight():uint { return this._stageHeight; }
 	}
 }

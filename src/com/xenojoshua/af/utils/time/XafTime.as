@@ -2,8 +2,6 @@ package com.xenojoshua.af.utils.time
 {
 	public class XafTime
 	{
-		public function XafTime() {}
-		
 		/**
 		 * Get now timestamp.
 		 * @return Number timestamp

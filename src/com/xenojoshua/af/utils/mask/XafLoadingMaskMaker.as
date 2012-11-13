@@ -5,7 +5,6 @@ package com.xenojoshua.af.utils.mask
 	import com.xenojoshua.af.resource.XafRsManager;
 	import com.xenojoshua.af.display.screen.XafScreenManager;
 	import com.xenojoshua.af.utils.console.XafConsole;
-	import com.xenojoshua.af.utils.loader.XafLoader;
 	
 	import flash.display.MovieClip;
 	import flash.display.Sprite;

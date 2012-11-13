@@ -6,8 +6,7 @@ package com.xenojoshua.af.utils.time
 		 * Get now timestamp.
 		 * @return Number timestamp
 		 */
-		public static function getTime():Number
-		{
+		public static function getTime():Number {
 			return Math.round((new Date()).valueOf() / 1000); // millisecond to second
 		}
 		
@@ -16,8 +15,7 @@ package com.xenojoshua.af.utils.time
 		 * @param String timeString default null
 		 * @return Number timestamp
 		 */
-		public static function getTimestamp(timeString:String = null):Number
-		{
+		public static function getTimestamp(timeString:String = null):Number {
 			var date:Date = new Date();
 			
 			var pattern:RegExp = /(\d\d\d\d)-(\d\d)-(\d\d) (\d\d):(\d\d):(\d\d)/; 
@@ -40,8 +38,7 @@ package com.xenojoshua.af.utils.time
 		 * @param Number timestamp
 		 * @return String time
 		 */
-		public static function setTime(timestamp:Number = 0):String
-		{
+		public static function setTime(timestamp:Number = 0):String {
 			var date:Date = (timestamp == 0) ? new Date() : new Date(timestamp * 1000);
 			
 			var H:String = XafTime.formatDateNumber((date.getHours()).toString());
@@ -56,8 +53,7 @@ package com.xenojoshua.af.utils.time
 		 * @param Number timestamp default 0
 		 * @return String date
 		 */
-		public static function getDate(timestamp:Number = 0):String
-		{
+		public static function getDate(timestamp:Number = 0):String {
 			var date:Date = (timestamp == 0) ? new Date() : new Date(timestamp * 1000);
 			
 			var Y:String = date.getFullYear().toString();
@@ -72,8 +68,7 @@ package com.xenojoshua.af.utils.time
 		 * @param String num
 		 * @return String num
 		 */
-		private static function formatDateNumber(num:String):String
-		{
+		private static function formatDateNumber(num:String):String {
 			if (num.length == 1) {
 				num = "0" + num;
 			}

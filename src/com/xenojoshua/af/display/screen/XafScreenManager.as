@@ -14,13 +14,11 @@ package com.xenojoshua.af.display.screen
 		
 		private var _screenLayers:Dictionary; // <name:String, layer:DisplayObjectContainer>
 		
-		public function XafScreenManager()
-		{
+		public function XafScreenManager() {
 			this._screenLayers = new Dictionary();
 		}
 		
-		public static function get instance():XafScreenManager
-		{
+		public static function get instance():XafScreenManager {
 			if (!XafScreenManager._mgr) {
 				XafScreenManager._mgr = new XafScreenManager();
 			}
@@ -40,8 +38,7 @@ package com.xenojoshua.af.display.screen
 			layer:DisplayObjectContainer = null,
 			isRootLayer:Boolean = false,
 			mouseEnabled:Boolean = true
-		):DisplayObjectContainer
-		{
+		):DisplayObjectContainer {
 			if (this._screenLayers.hasOwnProperty(name)) { // already registered
 				return this._screenLayers[name];
 			}
@@ -69,8 +66,7 @@ package com.xenojoshua.af.display.screen
 		 * @param String name
 		 * @return DisplayObjectContainer layer
 		 */
-		public function getLayer(name:String):DisplayObjectContainer
-		{
+		public function getLayer(name:String):DisplayObjectContainer {
 			var layer:DisplayObjectContainer = null;
 			
 			if (!this._screenLayers.hasOwnProperty(name)) {
@@ -88,8 +84,7 @@ package com.xenojoshua.af.display.screen
 		 * @param Boolean visibility
 		 * @return void
 		 */
-		public function setVisibility(name:String, visibility:Boolean):void
-		{
+		public function setVisibility(name:String, visibility:Boolean):void {
 			var layer:DisplayObjectContainer = null;
 			
 			if (!this._screenLayers.hasOwnProperty(name)) {

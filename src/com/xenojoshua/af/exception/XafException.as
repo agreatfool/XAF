@@ -4,8 +4,7 @@ package com.xenojoshua.af.exception
 
 	public class XafException extends Error
 	{
-		public function XafException(id:int = 0, message:String = "")
-		{
+		public function XafException(id:int = 0, message:String = "") {
 			var console:XafConsole = XafConsole.instance;
 			if (console) {
 				console.log(XafConsole.ERROR, XafExManager.instance.getExMsg(id));

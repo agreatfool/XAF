@@ -57,8 +57,7 @@ package com.xenojoshua.af.utils.console
 		 * Get instance of XafConsole.
 		 * @return XafConsole _console
 		 */
-		public static function get instance():XafConsole
-		{
+		public static function get instance():XafConsole {
 			return XafConsole._console;
 		}
 		
@@ -67,8 +66,7 @@ package com.xenojoshua.af.utils.console
 		 * @param int logLevel
 		 * @return void
 		 */
-		public static function startup(logLevel:int = 0):void
-		{
+		public static function startup(logLevel:int = 0):void {
 			if (!XafConsole._console) {
 				XafConsole._console = new XafConsole(logLevel);
 			}
@@ -79,8 +77,7 @@ package com.xenojoshua.af.utils.console
 		 * @param int logLevel
 		 * @return void
 		 */
-		public function XafConsole(logLevel:int)
-		{
+		public function XafConsole(logLevel:int) {
 			super();
 			
 			this.initFPStats();
@@ -98,8 +95,7 @@ package com.xenojoshua.af.utils.console
 		 * @param String msg
 		 * @return void
 		 */
-		public function log(logLevel:int, msg:String):void
-		{
+		public function log(logLevel:int, msg:String):void {
 			if (logLevel >= this._logLevel) {
 				msg = "[" + this.getLogLevelName(logLevel) + "]: " + msg;
 				this._consoleField.appendText("\n" + msg);
@@ -113,8 +109,7 @@ package com.xenojoshua.af.utils.console
 		 * @param int logLevel
 		 * @return String name
 		 */
-		private function getLogLevelName(logLevel:int):String
-		{
+		private function getLogLevelName(logLevel:int):String {
 			return XafConsole.LOG_LEVELS[logLevel];
 		}
 		
@@ -123,8 +118,7 @@ package com.xenojoshua.af.utils.console
 		 * @param int logLevel
 		 * @return void
 		 */
-		public function setLogLevel(logLevel:int):void
-		{
+		public function setLogLevel(logLevel:int):void {
 			if (XafConsole.LOG_LEVELS.hasOwnProperty(logLevel)) {
 				this._logLevel = logLevel;
 			}
@@ -134,8 +128,7 @@ package com.xenojoshua.af.utils.console
 		 * Init console container.
 		 * @return void
 		 */
-		private function initConsole():void
-		{
+		private function initConsole():void {
 			this.width = this._settings.consoleWidth;
 			this.height = this._settings.consoleHeight;
 			
@@ -153,8 +146,7 @@ package com.xenojoshua.af.utils.console
 		 * Draw fps status & add it into console.
 		 * @return void
 		 */
-		private function initFPStats():void
-		{
+		private function initFPStats():void {
 			this._fpStats = new Stats();
 			
 			// determine y position
@@ -177,8 +169,7 @@ package com.xenojoshua.af.utils.console
 		 * Draw console text field & add it into console.
 		 * @return void
 		 */
-		private function initConsoleField():void
-		{
+		private function initConsoleField():void {
 			this._consoleField = new TextField();
 			this._consoleField.backgroundColor = this._settings.consoleFieldBgColor;
 			this._consoleField.background = true;
@@ -208,8 +199,7 @@ package com.xenojoshua.af.utils.console
 		 * Drow switcher button & add it into this._fpStats.
 		 * @return void
 		 */
-		private function initSwitchBtn():void
-		{
+		private function initSwitchBtn():void {
 			this._switchBtn = new SimpleButton();
 			
 			var switchBtnXPos:int = this._settings.fpStatsWidth - this._settings.switchBtnWidth - 5;
@@ -246,8 +236,7 @@ package com.xenojoshua.af.utils.console
 		 * @param MouseEvent event
 		 * @return void
 		 */
-		protected function onSwitchBtnClick(event:MouseEvent):void
-		{
+		protected function onSwitchBtnClick(event:MouseEvent):void {
 			this._isConsoleVisible = !this._isConsoleVisible;
 			this._consoleField.visible = this._isConsoleVisible;
 		}

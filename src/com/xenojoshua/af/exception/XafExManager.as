@@ -16,8 +16,7 @@ package com.xenojoshua.af.exception
 		 * Get instance of XafExManager.
 		 * @return XafExManager _mgr
 		 */
-		public static function get instance():XafExManager
-		{
+		public static function get instance():XafExManager {
 			if (!XafExManager._mgr) {
 				XafExManager._mgr = new XafExManager();
 			}
@@ -29,8 +28,7 @@ package com.xenojoshua.af.exception
 		 * @param int exId
 		 * @return String message
 		 */
-		public function getExMsg(exId:int):String
-		{
+		public function getExMsg(exId:int):String {
 			return this._msg[exId];
 		}
 		
@@ -39,8 +37,7 @@ package com.xenojoshua.af.exception
 		 * @param Object messages
 		 * @return void
 		 */
-		public function registerMessages(messages:Object):void
-		{
+		public function registerMessages(messages:Object):void {
 			if (messages) {
 				for (var key:String in messages) {
 					this._msg[key] =  messages[key];

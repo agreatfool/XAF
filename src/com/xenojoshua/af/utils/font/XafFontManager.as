@@ -9,8 +9,7 @@ package com.xenojoshua.af.utils.font
 		 * @param Class cls font class
 		 * @return void
 		 */
-		public static function registerFont(cls:Class):void
-		{
+		public static function registerFont(cls:Class):void {
 			Font.registerFont(cls);
 		}
 	}

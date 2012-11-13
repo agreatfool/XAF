@@ -14,8 +14,7 @@ package com.xenojoshua.af.utils.timer
 		 * Get instance of XafTimerManager.
 		 * @return XafTimerManager _mgr
 		 */
-		public static function get instance():XafTimerManager
-		{
+		public static function get instance():XafTimerManager {
 			if (!XafTimerManager._mgr) {
 				XafTimerManager._mgr = new XafTimerManager();
 			}
@@ -26,8 +25,7 @@ package com.xenojoshua.af.utils.timer
 		 * Initialize XafTimerManager.
 		 * @return void
 		 */
-		public function XafTimerManager()
-		{
+		public function XafTimerManager() {
 			this._timers = new Dictionary();
 		}
 		
@@ -36,8 +34,7 @@ package com.xenojoshua.af.utils.timer
 		 * @param String name
 		 * @return Timer timer
 		 */
-		public function getTimer(name:String):Timer
-		{
+		public function getTimer(name:String):Timer {
 			return this._timers[name];
 		}
 		
@@ -56,8 +53,7 @@ package com.xenojoshua.af.utils.timer
 			onTime:Function,
 			repeatCount:int = 0,
 			onComplete:Function = null
-		):Timer
-		{
+		):Timer {
 			var timer:Timer = new Timer(delay, repeatCount);
 			timer.addEventListener(TimerEvent.TIMER, onTime);
 			if (null != onComplete) {
@@ -74,8 +70,7 @@ package com.xenojoshua.af.utils.timer
 		 * @param String name
 		 * @return void
 		 */
-		public function destoryTimer(name:String):void
-		{
+		public function destoryTimer(name:String):void {
 			var timer:Timer = this._timers[name];
 			if (timer) {
 				timer.stop();

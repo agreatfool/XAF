@@ -14,8 +14,7 @@ package com.xenojoshua.af.config
 		 * Get instance of XafConfig.
 		 * @return XafConfig _config
 		 */
-		public static function get instance():XafConfig
-		{
+		public static function get instance():XafConfig {
 			if (!XafConfig._config) {
 				XafConfig._config = new XafConfig();
 			}

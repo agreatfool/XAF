@@ -20,8 +20,7 @@ package com.xenojoshua.af.utils.mask
 		 * Get instance of XafMaskMaker.
 		 * @return XafMaskMaker _maker
 		 */
-		public static function get instance():XafMaskMaker
-		{
+		public static function get instance():XafMaskMaker {
 			if (!XafMaskMaker._maker) {
 				XafMaskMaker._maker = new XafMaskMaker();
 			}
@@ -32,8 +31,7 @@ package com.xenojoshua.af.utils.mask
 		 * Initialize XafMaskMaker.
 		 * @return void
 		 */
-		public function XafMaskMaker()
-		{
+		public function XafMaskMaker() {
 			this._masks = new Dictionary();
 		}
 		
@@ -45,8 +43,7 @@ package com.xenojoshua.af.utils.mask
 		 * @param Number alpha
 		 * @return void
 		 */
-		public function makeMask(display:DisplayObject, alpha:Number = 0.3):void
-		{
+		public function makeMask(display:DisplayObject, alpha:Number = 0.3):void {
 			var mask:Sprite = new Sprite();
 			var graph:Graphics = mask.graphics;
 			graph.beginFill(0x000000, alpha);
@@ -70,8 +67,7 @@ package com.xenojoshua.af.utils.mask
 		 * @param DisplayObject display
 		 * @return void
 		 */
-		public function removeMask(display:DisplayObject):void
-		{
+		public function removeMask(display:DisplayObject):void {
 			var mask:Sprite = this._masks[display];
 			if(mask && mask.parent) {
 				mask.parent.removeChild(mask);

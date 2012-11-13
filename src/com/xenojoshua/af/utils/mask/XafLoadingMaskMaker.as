@@ -23,8 +23,7 @@ package com.xenojoshua.af.utils.mask
 		 * Get instance of XafLoadingMaskMaker.
 		 * @return XafLoadingMaskMaker _maker
 		 */
-		public static function get instance():XafLoadingMaskMaker
-		{
+		public static function get instance():XafLoadingMaskMaker {
 			if (!XafLoadingMaskMaker._maker) {
 				XafConsole.instance.log(XafConsole.ERROR, 'XafLoadingMaskMaker: XafLoadingMaskMaker has not been "startup"ed yet!');
 			}
@@ -37,8 +36,7 @@ package com.xenojoshua.af.utils.mask
 		 * @param String className
 		 * @param Boolean needToLoad default false
 		 */
-		public static function startup(swfName:String, className:String):XafLoadingMaskMaker
-		{
+		public static function startup(swfName:String, className:String):XafLoadingMaskMaker {
 			if (!XafLoadingMaskMaker._maker) {
 				XafLoadingMaskMaker._maker = new XafLoadingMaskMaker(swfName, className);
 			}
@@ -51,8 +49,7 @@ package com.xenojoshua.af.utils.mask
 		 * @param String className
 		 * @return void
 		 */
-		public function XafLoadingMaskMaker(swfName:String, className:String)
-		{
+		public function XafLoadingMaskMaker(swfName:String, className:String) {
 			this._loadingSwfName = swfName;
 			this._loadingClassName = className;
 		}
@@ -62,8 +59,7 @@ package com.xenojoshua.af.utils.mask
 		 * If loading number equals to 1, start to display loading movie.
 		 * @return void
 		 */
-		public function loading():void
-		{
+		public function loading():void {
 			++this._loadingNum;
 			if(this._loadingNum == 1) { // only need to build loading movie when loading number start to be 1
 				this._loadingMovie = this.buildLoadingMovie();
@@ -76,8 +72,7 @@ package com.xenojoshua.af.utils.mask
 		 * If loading number equals to or less than 0, hide loading movie.
 		 * @return void
 		 */
-		public function hide():void
-		{
+		public function hide():void {
 			--this._loadingNum;
 			if (this._loadingNum < 0) {
 				this._loadingNum = 0;
@@ -94,8 +89,7 @@ package com.xenojoshua.af.utils.mask
 		 * Build loading movie(both mask & loading movie).
 		 * @return Sprite loadingMovie
 		 */
-		private function buildLoadingMovie():Sprite
-		{
+		private function buildLoadingMovie():Sprite {
 			var movie:Sprite = new Sprite();
 			
 			movie.graphics.beginFill(0x000000, 0.3);

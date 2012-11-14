@@ -1,14 +1,11 @@
 package com.xenojoshua.af.config
 {
+	import com.xenojoshua.af.exception.XafException;
+	import com.xenojoshua.af.utils.console.XafConsole;
+
 	public class XafConfig
 	{
 		private static var _config:XafConfig;
-		
-		private var _mediaHost:String;
-		private var _apiHost:String;
-		
-		private var _stageWidth:uint;
-		private var _stageHeight:uint;
 		
 		/**
 		 * Get instance of XafConfig.
@@ -21,18 +18,80 @@ package com.xenojoshua.af.config
 			return XafConfig._config;
 		}
 		
-		public function XafConfig() {}
+		/**
+		 * Initialize XafConfig.
+		 * @return void
+		 */
+		public function XafConfig() {
+			this._configs = new Object();
+		}
 		
-		public function set mediaHost(host:String):void { this._mediaHost = host; }
-		public function get mediaHost():String { return this._mediaHost; }
+		private var _mediaHost:String;
+		private var _apiHost:String;
 		
-		public function set apiHost(host:String):void { this._apiHost = host; }
-		public function get apiHost():String { return this._apiHost; }
+		private var _stageWidth:uint;
+		private var _stageHeight:uint;
 		
-		public function set stageWidth(width:uint):void { this._stageWidth = width; }
-		public function get stageWidth():uint { return this._stageWidth; }
+		private var _configs:Object; // <name:String, configs:Object>
+		
+		/**
+		 * Register configs into config manager.
+		 * @param String name
+		 * @param Object configs
+		 * @return void
+		 */
+		public function registerConfigs(name:String, configs:Object):void {
+			XafConsole.instance.log(XafConsole.INFO, 'XafConfig: Config file with name "' + name + '" registered!');
+			this._configs[name] = configs;
+		}
+		
+		/**
+		 * Get configs from registered "configName".
+		 * @param String configName
+		 * @return Object value
+		 */
+		public function loadConfigs(configName:String):Object {
+			var value:Object = null;
+			
+			if (!this._configs.hasOwnProperty(configName)) {
+				XafConsole.instance.log(XafConsole.ERROR, 'XafConfig: Config file with name "' + configName + '" not registered!');
+			} else {
+				value = this._configs[configName];
+			}
+			
+			return value;
+		}
+		
+		/**
+		 * Get config from registered "configName" with "key".
+		 * @param String configName
+		 * @param String key
+		 * @return * value
+		 */
+		public function loadConfig(configName:String, key:String):* {
+			var value:* = null;
+			
+			if (!this._configs.hasOwnProperty(configName)) {
+				XafConsole.instance.log(XafConsole.ERROR, 'XafConfig: Config file with name "' + configName + '" not registered!');
+			} else if (!this._configs[configName].hasOwnProperty(key)) {
+				XafConsole.instance.log(XafConsole.ERROR, 'XafConfig: Config with key "' + key + '" not found in file "' + configName + '"!');
+			} else {
+				value = this._configs[configName][key]
+			}
+			
+			return value;
+		}
+		
+		public function set mediaHost(host:String):void   { this._mediaHost = host; }
+		public function get mediaHost():String            { return this._mediaHost; }
+		
+		public function set apiHost(host:String):void     { this._apiHost = host; }
+		public function get apiHost():String              { return this._apiHost; }
+		
+		public function set stageWidth(width:uint):void   { this._stageWidth = width; }
+		public function get stageWidth():uint             { return this._stageWidth; }
 		
 		public function set stageHeight(height:uint):void { this._stageHeight = height; }
-		public function get stageHeight():uint { return this._stageHeight; }
+		public function get stageHeight():uint            { return this._stageHeight; }
 	}
 }

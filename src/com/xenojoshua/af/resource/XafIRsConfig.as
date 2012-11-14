@@ -4,24 +4,50 @@ package com.xenojoshua.af.resource
 	{
 		/**
 		 * public class AppResources implements XafIRsConfig {
-		 *     public static const RESOURCE_A:String = 'rsa';
-		 *     public static const RESOURCE_B:String = 'rsb';
-		 *     public static const RESOURCE_C:String = 'rsc';
 		 *     
+		 *     // FILES
+		 *     public static const FILE_MAIN:String = 'file.main';    // MovieClip swf resource file
+		 *     public static const FILE_LISU:String = 'file.lisu';    // font swf resource file
+		 *     public static const FILE_CFSD:String = 'file.soldier'; // config json resource file
+		 *     
+		 *     // MOVIECLIP CLASS NAMES
+		 *     // const string is the class name of the MovieClip
+		 *     public static const CLASS_MAIN:String = 'main.MainView';
+		 *     
+		 *     // CONFIG NAMES
+		 *     public static const CONF_SOLDIER:String = 'config.soldier';
+		 *     
+		 *     // FONTS CLASS NAMES
+		 *     public static const FONT_LISU:String = 'LISU1';
+		 *     
+		 *     // configs also can come from other config files
+		 *     // read "Resource Config" part in "XafRsManager" to get config structure
 		 *     private static var _configs:Object = {
-		 *         rsa: {
+		 *         'file.main': {
 		 *             url:     'assets/swf/main.swf',
 		 *             type:    'swf',
-		 *             size:    0,
 		 *             preload: true,
-		 *             main:    true,
+		 *             main:    true
 		 *         },
-		 *         rsb: { ... },
-		 *         rsc: { ... }
+		 *         'file.lisu': {
+		 *             url:     'assets/font/lisu.swf',
+		 *             type:    'font',
+		 *             preload: true,
+		 *             font:    ['LISU1']
+		 *         },
+		 *         'file.soldier': {
+		 *             url:    'assets/json/soldier.json',
+		 *             type:   'config',
+		 *             config: 'config.soldier'
+		 *         }
 		 *     };
 		 *     
 		 *     public static function getConfigs():Object {
-		 *         return AppResources._configs;
+		 *         return AppResources._configs; // configs also can come from other config files
+		 *     }
+		 *     
+		 *     public static function getConfig(name:String):Object {
+		 *         return AppResources._configs[name];
 		 *     }
 		 * }
 		 */

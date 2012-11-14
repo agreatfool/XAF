@@ -8,6 +8,7 @@ package com.xenojoshua.af.resource
 	import com.xenojoshua.af.config.XafConfig;
 	import com.xenojoshua.af.exception.XafException;
 	import com.xenojoshua.af.utils.console.XafConsole;
+	import com.xenojoshua.af.utils.font.XafFontManager;
 	
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
@@ -39,19 +40,25 @@ package com.xenojoshua.af.resource
 		 * ----------------------------------------------------------------
 		 * Note:
 		 * ----------------------------------------------------------------
-		 * Only swf resources will be registered in this resource manager.
-		 * Other resources have to be processed before "this.dispose()" function called.
+		 * Resource of type 'swf' would be registered in this XafRsManager.
+		 * Resource of type 'font' would be registered in the XafFontManager.
+		 * Resource of type 'config' would be registered in the XafConfig.
+		 * Resource of type 'image' | 'xml' | 'json' will not be processed by default.
+		 * 
+		 * Resources have to be processed before "this.dispose()" function called.
 		 * (XML or JSON can be added into XafConfig, etc...)
 		 * After "this.dispose()" all temporarily data would be deleted.
 		 * 
 		 * ----------------------------------------------------------------
 		 * Resource Config:
 		 * ----------------------------------------------------------------
-		 * url:String      relative resource url
-		 * type:String     swf | xml | json
-		 * size:int        default 0, size of resource
-		 * preload:Boolean default false, does resource have to be loaded before application initialized
-		 * main:Boolean    default false, is resource main swf of the application
+		 * url:String      obligatory relative resource url
+		 * type:String     obligatory swf | font | config | image | xml | json
+		 * size:int        optional   default 0, size of resource
+		 * preload:Boolean optional   default false, does resource have to be loaded before application initialized
+		 * main:Boolean    optional   default false, is resource main swf of the application
+		 * font:Array      optional   default [], font class names contained in the resource file, e.g. ['LISU1'(font class name)]
+		 * config:String   optional   default '', config name registered in XafConfig contained in the resource json file
 		 */
 		
 		/**
@@ -75,9 +82,12 @@ package com.xenojoshua.af.resource
 		private var _swfLoaders:Object; // <name:String, loader:SWFLoader>
 		private var _loadingList:Object; // <name:String, type:String>
 		private var _validTypes:Object = {
-			swf:  'swf',
-			xml:  'xml',
-			json: 'json'
+			swf:    'swf',
+			font:   'font',
+			config: 'config',
+			xml:    'xml',
+			json:   'json',
+			image:  'image'
 		};
 		private var _resources:Object; // <name:String, config:Object>
 		
@@ -130,6 +140,12 @@ package com.xenojoshua.af.resource
 			}
 			if (!config.hasOwnProperty('main')) {
 				config.main = false;
+			}
+			if (!config.hasOwnProperty('font')) {
+				config.font = [];
+			}
+			if (!config.hasOwnProperty('config')) {
+				config.config = '';
 			}
 			
 			return config;
@@ -219,14 +235,21 @@ package com.xenojoshua.af.resource
 			this._loadingList = new Array();
 			this._loader = new LoaderMax(this._loaderVars);
 			
+			var isThereAnyPreload:Boolean = false;
+			
 			for (var rsName:String in this._resources) {
-				var config:Object = this._resources[rsName];
-				if (config.preload) {
-					this._loadingList[rsName] = config.type;
-					this.appendLoader(this.getAbsoluteUrl(config.url), config.type);
+				if (this._resources[rsName].preload) {
+					this._loadingList[rsName] = this._resources[rsName].type;
+					this.appendLoader(
+						this.getAbsoluteUrl(this._resources[rsName].url),
+						this._resources[rsName].type
+					);
+					isThereAnyPreload = true;
 				}
 			}
-			this._loader.load();
+			if (isThereAnyPreload) {
+				this._loader.load();
+			}
 		}
 		
 		/**
@@ -245,10 +268,12 @@ package com.xenojoshua.af.resource
 		 * @return void
 		 */
 		private function appendLoader(url:String, type:String):void {
-			if (type == this._validTypes.swf) {
+			if (type == this._validTypes.swf
+				|| type == this._validTypes.font) {
 				this._loader.append(new SWFLoader(url));
 			} else if (type == this._validTypes.xml
-				|| type == this._validTypes.json) {
+				|| type == this._validTypes.json
+				|| type == this._validTypes.config) {
 				this._loader.append(new DataLoader(url));
 			} else {
 				this._loader.append(new ImageLoader(url));
@@ -266,7 +291,17 @@ package com.xenojoshua.af.resource
 			
 			for (var rsName:String in this._loadingList) {
 				if (this._loadingList[rsName] == this._validTypes.swf) {
+					// register swf resource
 					this.registerSwfLoader(rsName, this.getContentAsSwfLoader(rsName));
+				} else if (this._loadingList[rsName] == this._validTypes.font) {
+					// register font resource
+					this.registerSwfLoader(rsName, this.getContentAsSwfLoader(rsName));
+					for each (var fontName:String in this._resources[rsName].font) {
+						XafFontManager.instance.registerFont(this.getClassDefInSwf(rsName, fontName));
+					}
+				} else if (this._loadingList[rsName] == this._validTypes.config) {
+					// register config resource
+					XafConfig.instance.registerConfigs(this._resources[rsName].config, this.getJSON(rsName));
 				}
 			}
 			
@@ -414,6 +449,7 @@ package com.xenojoshua.af.resource
 		 * @return void
 		 */
 		private function registerSwfLoader(name:String, loader:SWFLoader):void {
+			XafConsole.instance.log(XafConsole.INFO, 'XafRsManager: SWF "' + name + '" registered!');
 			this._swfLoaders[name] = loader;
 		}
 		

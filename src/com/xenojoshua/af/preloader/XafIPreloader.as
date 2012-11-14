@@ -9,10 +9,10 @@ package com.xenojoshua.af.preloader
 		function parseFlashVars():void;
 		
 		/**
-		 * Load the xml file which describes the items should be loaded in the preloader.
+		 * Load the xml file which describes the resource items.
 		 * @return void
 		 */
-		function loadPreloadListXml():void;
+		function loadResourceListXml():void;
 		
 		/**
 		 * Load the items should be loaded in the preloader.

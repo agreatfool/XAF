@@ -52,7 +52,7 @@ package com.xenojoshua.af.resource
 		 * @return void
 		 */
 		private function onComplete(e:Event):void {
-			trace('XafInitLoader: Load complete!' + e.toString());
+			trace('XafInitLoader: Load complete!');
 			this._completeSignal.dispatch(this);
 		}
 		
@@ -62,7 +62,7 @@ package com.xenojoshua.af.resource
 		 * @return void
 		 */
 		private function onError(e:IOErrorEvent):void {
-			trace('XafInitLoader: Load failed!' + e.toString());
+			trace('XafInitLoader: Load failed! Msg: ' + e.text);
 			if (this._errorSignal) {
 				this._errorSignal.dispatch(this);
 			}

@@ -57,7 +57,8 @@ package com.xenojoshua.af.resource
 		 * size:int        optional   default 0, size of resource
 		 * preload:Boolean optional   default false, does resource have to be loaded before application initialized
 		 * main:Boolean    optional   default false, is resource main swf of the application
-		 * font:Array      optional   default [], font class names contained in the resource file, e.g. ['LISU1'(font class name)]
+		 * font:Object     optional   default {}, font class names & font name contained in the resource file
+		 *                                e.g. {'LISU1'(font class name): 'LiSu'(font name)}
 		 * config:String   optional   default '', config name registered in XafConfig contained in the resource json file
 		 */
 		
@@ -142,7 +143,7 @@ package com.xenojoshua.af.resource
 				config.main = false;
 			}
 			if (!config.hasOwnProperty('font')) {
-				config.font = [];
+				config.font = {};
 			}
 			if (!config.hasOwnProperty('config')) {
 				config.config = '';
@@ -296,8 +297,12 @@ package com.xenojoshua.af.resource
 				} else if (this._loadingList[rsName] == this._validTypes.font) {
 					// register font resource
 					this.registerSwfLoader(rsName, this.getContentAsSwfLoader(rsName));
-					for each (var fontName:String in this._resources[rsName].font) {
-						XafFontManager.instance.registerFont(this.getClassDefInSwf(rsName, fontName));
+					for (var fontClassName:String in this._resources[rsName].font) {
+						XafFontManager.instance.registerFont(
+							this._resources[rsName].font[fontClassName],
+							fontClassName,
+							this.getClassDefInSwf(rsName, fontClassName)
+						);
 					}
 				} else if (this._loadingList[rsName] == this._validTypes.config) {
 					// register config resource
@@ -449,8 +454,8 @@ package com.xenojoshua.af.resource
 		 * @return void
 		 */
 		private function registerSwfLoader(name:String, loader:SWFLoader):void {
-			XafConsole.instance.log(XafConsole.INFO, 'XafRsManager: SWF "' + name + '" registered!');
 			this._swfLoaders[name] = loader;
+			XafConsole.instance.log(XafConsole.INFO, 'XafRsManager: SWF "' + name + '" registered!');
 		}
 		
 		/**

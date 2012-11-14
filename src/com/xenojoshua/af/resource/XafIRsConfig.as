@@ -17,28 +17,28 @@ package com.xenojoshua.af.resource
 		 *     // CONFIG NAMES
 		 *     public static const CONF_SOLDIER:String = 'config.soldier';
 		 *     
-		 *     // FONTS CLASS NAMES
-		 *     public static const FONT_LISU:String = 'LISU1';
+		 *     // FONTS NAMES
+		 *     public static const FONT_LISU:String = 'LiSu';
 		 *     
 		 *     // configs also can come from other config files
 		 *     // read "Resource Config" part in "XafRsManager" to get config structure
 		 *     private static var _configs:Object = {
-		 *         'file.main': {
+		 *         'file.main': { // same to AppResources.FILE_MAIN
 		 *             url:     'assets/swf/main.swf',
 		 *             type:    'swf',
 		 *             preload: true,
 		 *             main:    true
 		 *         },
-		 *         'file.lisu': {
+		 *         'file.lisu': { // same to AppResources.FILE_LISU
 		 *             url:     'assets/font/lisu.swf',
 		 *             type:    'font',
 		 *             preload: true,
-		 *             font:    ['LISU1']
+		 *             font:    {'LISU1': 'LiSu'} // 'fontClassName': 'fontName', fontName is same to AppResouces.FONT_LISU
 		 *         },
-		 *         'file.soldier': {
+		 *         'file.soldier': { // same to AppResources.FILE_CFSD
 		 *             url:    'assets/json/soldier.json',
 		 *             type:   'config',
-		 *             config: 'config.soldier'
+		 *             config: 'config.soldier' // same to AppResources.CONF_SOLDIER, use this reference in code to find configs
 		 *         }
 		 *     };
 		 *     

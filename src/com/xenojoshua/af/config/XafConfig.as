@@ -41,8 +41,8 @@ package com.xenojoshua.af.config
 		 * @return void
 		 */
 		public function registerConfigs(name:String, configs:Object):void {
-			XafConsole.instance.log(XafConsole.INFO, 'XafConfig: Config file with name "' + name + '" registered!');
 			this._configs[name] = configs;
+			XafConsole.instance.log(XafConsole.INFO, 'XafConfig: Config file with name "' + name + '" registered!');
 		}
 		
 		/**

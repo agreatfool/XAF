@@ -2,7 +2,10 @@ package com.xenojoshua.af.utils.font
 {
 	import com.xenojoshua.af.utils.console.XafConsole;
 	
+	import flash.display.DisplayObjectContainer;
 	import flash.text.Font;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	import flash.utils.getQualifiedClassName;
 
 	public class XafFontManager
@@ -72,6 +75,43 @@ package com.xenojoshua.af.utils.font
 			}
 			
 			return name;
+		}
+		
+		/**
+		 * Format font of TextField.
+		 * @param TextField field
+		 * @param String fontName default null
+		 * @return void
+		 */
+		public function formatTextFont(field:TextField, fontName:String = null):void {
+			var format:TextFormat = field.getTextFormat();
+			
+			if (fontName == null) {
+				format.font = this._defaultChineseFont;
+			} else {
+				format.font = fontName;
+			}
+			
+			field.setTextFormat(format);
+			field.defaultTextFormat = format;
+			field.embedFonts = true;
+		}
+		
+		/**
+		 * Format font of all TextField(s) in a DisplayObjectContainer.
+		 * @param DisplayObjectContainer container
+		 * @param String fontName default null
+		 * @return void
+		 */
+		public function formatTextFonts(container:DisplayObjectContainer, fontName:String = null):void {
+			var totalChildNum:int = container.numChildren;
+			
+			for(var index:int = 0; index < totalChildNum; ++index) {
+				var child:Object = container.getChildAt(index);
+				if (child is TextField) {
+					this.formatTextFont(child as TextField, fontName);
+				}
+			}
 		}
 		
 		/**

@@ -36,6 +36,7 @@ package com.xenojoshua.af.resource
 		 * XafRsManager.instance.registerResources(configs);
 		 * XafRsManager.instance.registerCompleteSignal(onComplete).registerErrorSignal(onError);
 		 * XafRsManager.instance.prepareLoading(['resourceA', 'resourceB', ...]).startLoading();
+		 * // XafRsManager.instance.loadPreloads(); // load preload items
 		 * 
 		 * ----------------------------------------------------------------
 		 * Note:

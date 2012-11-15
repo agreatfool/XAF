@@ -3,6 +3,7 @@ package com.xenojoshua.af.utils.console
 	import com.xenojoshua.af.config.XafConfig;
 	import com.xenojoshua.af.constant.XafConst;
 	import com.xenojoshua.af.display.screen.XafScreenManager;
+	import com.xenojoshua.af.exception.XafException;
 	
 	import flash.display.DisplayObjectContainer;
 	import flash.display.SimpleButton;
@@ -17,6 +18,30 @@ package com.xenojoshua.af.utils.console
 	public class XafConsole extends Sprite
 	{
 		private static var _console:XafConsole;
+		
+		/**
+		 * Get instance of XafConsole.
+		 * @return XafConsole _console
+		 */
+		public static function get instance():XafConsole {
+			if (!XafConsole._console) {
+				XafConsole._console = new XafConsole();
+			}
+			return XafConsole._console;
+		}
+		
+		/**
+		 * Restart & redraw console instance.
+		 * It would be called after layer registration done,
+		 * console UI is possible to be initialized.
+		 * @return XafConsole _console
+		 */
+		public static function restart():XafConsole {
+			var currLogLevel:int = XafConsole.instance.logLevel;
+			XafConsole._console = new XafConsole(currLogLevel);
+			
+			return XafConsole._console;
+		}
 		
 		public static const DEBUG:int   = 0;
 		public static const INFO:int    = 1;
@@ -53,39 +78,30 @@ package com.xenojoshua.af.utils.console
 			switchBtnOverColor:  0x9966FF
 		};
 		
-		/**
-		 * Get instance of XafConsole.
-		 * @return XafConsole _console
-		 */
-		public static function get instance():XafConsole {
-			return XafConsole._console;
-		}
-		
-		/**
-		 * Initialize console instance.
-		 * @param int logLevel
-		 * @return void
-		 */
-		public static function startup(logLevel:int = 0):void {
-			if (!XafConsole._console) {
-				XafConsole._console = new XafConsole(logLevel);
-			}
-		}
+		private var _isUIEnabled:Boolean;
 		
 		/**
 		 * Constructor. Draw everything and add into console layer.
-		 * @param int logLevel
+		 * @param int logLevel default 0, DEBUG level
 		 * @return void
 		 */
-		public function XafConsole(logLevel:int) {
+		public function XafConsole(logLevel:int = 0) {
 			super();
 			
-			this.initFPStats();
-			this.initConsoleField();
-			this.initSwitchBtn();
-			this.initConsole();
+			// check screen layer registration
+			try {
+				XafScreenManager.instance.getLayer(XafConst.SCREEN_CONSOLE);
+				this._isUIEnabled = true;
+			} catch (e:XafException) {
+				if (e.errorID == 10002) { // console layer not registered
+					this._isUIEnabled = false;
+				}
+			}
+			// draw UI
+			if (this._isUIEnabled) {
+				this.drawUI();
+			}
 			
-			XafScreenManager.instance.getLayer(XafConst.SCREEN_CONSOLE).addChild(this);
 			this._logLevel = logLevel;
 		}
 		
@@ -98,10 +114,34 @@ package com.xenojoshua.af.utils.console
 		public function log(logLevel:int, msg:String):void {
 			if (logLevel >= this._logLevel) {
 				msg = "[" + this.getLogLevelName(logLevel) + "]: " + msg;
-				this._consoleField.appendText("\n" + msg);
+				if (this._isUIEnabled) { // UI enabled
+					this._consoleField.appendText("\n" + msg);
+					this._consoleField.scrollV = this._consoleField.maxScrollV;
+				}
 				trace(msg);
 			}
-			this._consoleField.scrollV = this._consoleField.maxScrollV;
+		}
+		
+		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+		//-* UTILITIES
+		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+		/**
+		 * Set console log level.
+		 * @param int logLevel
+		 * @return void
+		 */
+		public function set logLevel(logLevel:int):void {
+			if (XafConsole.LOG_LEVELS.hasOwnProperty(logLevel)) {
+				this._logLevel = logLevel;
+			}
+		}
+		
+		/**
+		 * Get console log level.
+		 * @return int logLevel
+		 */
+		public function get logLevel():int {
+			return this._logLevel;
 		}
 		
 		/**
@@ -113,15 +153,19 @@ package com.xenojoshua.af.utils.console
 			return XafConsole.LOG_LEVELS[logLevel];
 		}
 		
+		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+		//-* UI FUNCTIONS
+		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 		/**
-		 * Set console log level.
-		 * @param int logLevel
+		 * Draw console UI.
 		 * @return void
 		 */
-		public function setLogLevel(logLevel:int):void {
-			if (XafConsole.LOG_LEVELS.hasOwnProperty(logLevel)) {
-				this._logLevel = logLevel;
-			}
+		private function drawUI():void {
+			this.initFPStats();
+			this.initConsoleField();
+			this.initSwitchBtn();
+			this.initConsole();
+			XafScreenManager.instance.getLayer(XafConst.SCREEN_CONSOLE).addChild(this);
 		}
 		
 		/**
@@ -231,6 +275,9 @@ package com.xenojoshua.af.utils.console
 			this._consoleField.visible = this._isConsoleVisible;
 		}
 		
+		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+		//-* CLICK EVENT
+		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 		/**
 		 * Switcher button click event, display | hide console.
 		 * @param MouseEvent event

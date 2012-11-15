@@ -1,4 +1,4 @@
-package com.xenojoshua.af.display.screen
+package com.xenojoshua.af.mvc.view.screen
 {
 	import com.xenojoshua.af.constant.XafConst;
 	import com.xenojoshua.af.exception.XafException;

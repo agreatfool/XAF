@@ -1,4 +1,4 @@
-package com.xenojoshua.af.model.vo
+package com.xenojoshua.af.mvc.model.vo
 {
 	public class XafVo
 	{

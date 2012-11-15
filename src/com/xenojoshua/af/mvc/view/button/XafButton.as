@@ -1,4 +1,4 @@
-package com.xenojoshua.af.display.button
+package com.xenojoshua.af.mvc.view.button
 {
 	import com.xenojoshua.af.utils.font.XafFontManager;
 	

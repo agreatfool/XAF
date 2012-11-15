@@ -4,7 +4,7 @@ package com.xenojoshua.af.mvc.controller.event
 	
 	public class XafEvent extends Event
 	{
-		private var _data:Object;
+		protected var _data:Object;
 		
 		/**
 		 * Initialize XafEvent.

@@ -2,7 +2,7 @@ package com.xenojoshua.af.utils.console
 {
 	import com.xenojoshua.af.config.XafConfig;
 	import com.xenojoshua.af.constant.XafConst;
-	import com.xenojoshua.af.display.screen.XafScreenManager;
+	import com.xenojoshua.af.mvc.view.screen.XafScreenManager;
 	import com.xenojoshua.af.exception.XafException;
 	
 	import flash.display.DisplayObjectContainer;

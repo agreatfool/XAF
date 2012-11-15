@@ -3,7 +3,7 @@ package com.xenojoshua.af.utils.mask
 	import com.xenojoshua.af.config.XafConfig;
 	import com.xenojoshua.af.constant.XafConst;
 	import com.xenojoshua.af.resource.XafRsManager;
-	import com.xenojoshua.af.display.screen.XafScreenManager;
+	import com.xenojoshua.af.mvc.view.screen.XafScreenManager;
 	import com.xenojoshua.af.utils.console.XafConsole;
 	
 	import flash.display.MovieClip;

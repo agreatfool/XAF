@@ -1,5 +1,7 @@
 package com.xenojoshua.af.resource
 {
+	import com.xenojoshua.af.utils.console.XafConsole;
+	
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.net.URLLoader;
@@ -52,7 +54,7 @@ package com.xenojoshua.af.resource
 		 * @return void
 		 */
 		private function onComplete(e:Event):void {
-			trace('XafInitLoader: Load complete!');
+			XafConsole.instance.log(XafConsole.INFO, 'XafInitLoader: Load complete!');
 			this._completeSignal.dispatch(this);
 		}
 		
@@ -62,7 +64,7 @@ package com.xenojoshua.af.resource
 		 * @return void
 		 */
 		private function onError(e:IOErrorEvent):void {
-			trace('XafInitLoader: Load failed! Msg: ' + e.text);
+			XafConsole.instance.log(XafConsole.ERROR, 'XafInitLoader: Load failed! Msg: ' + e.text);
 			if (this._errorSignal) {
 				this._errorSignal.dispatch(this);
 			}

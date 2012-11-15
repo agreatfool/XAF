@@ -1,0 +1,5 @@
+vendors:
+1. org.robotlegs：依赖
+2. net.hires.debug.Stats：依赖
+3. org.osflash.signals：依赖
+4. com.greensock：依赖

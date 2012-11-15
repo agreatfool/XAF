@@ -26,6 +26,10 @@ package com.xenojoshua.af.config
 			this._configs = new Object();
 		}
 		
+		private var _isLocal:Boolean;
+		
+		private var _playerId:int;
+		
 		private var _mediaHost:String;
 		private var _apiHost:String;
 		
@@ -81,6 +85,12 @@ package com.xenojoshua.af.config
 			
 			return value;
 		}
+		
+		public function set isLocal(val:Boolean):void     { this._isLocal = val; }
+		public function get isLocal():Boolean             { return this._isLocal; }
+		
+		public function set playerId(id:int):void         { this._playerId = id; }
+		public function get playerId():int                { return this._playerId; }
 		
 		public function set mediaHost(host:String):void   { this._mediaHost = host; }
 		public function get mediaHost():String            { return this._mediaHost; }

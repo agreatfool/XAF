@@ -42,6 +42,10 @@ package com.xenojoshua.af.resource
 		 *         }
 		 *     };
 		 *     
+		 *     public static function setConfigs(resources:Object):void {
+		 *         AppResources._configs = resources;
+		 *     }
+		 *     
 		 *     public static function getConfigs():Object {
 		 *         return AppResources._configs; // configs also can come from other config files
 		 *     }

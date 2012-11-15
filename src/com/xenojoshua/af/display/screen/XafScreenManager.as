@@ -12,17 +12,25 @@ package com.xenojoshua.af.display.screen
 	{
 		private static var _mgr:XafScreenManager;
 		
-		private var _screenLayers:Dictionary; // <name:String, layer:DisplayObjectContainer>
-		
-		public function XafScreenManager() {
-			this._screenLayers = new Dictionary();
-		}
-		
+		/**
+		 * Get instance of XafScreenManager.
+		 * @return XafScreenManager _mgr
+		 */
 		public static function get instance():XafScreenManager {
 			if (!XafScreenManager._mgr) {
 				XafScreenManager._mgr = new XafScreenManager();
 			}
 			return XafScreenManager._mgr;
+		}
+		
+		private var _screenLayers:Dictionary; // <name:String, layer:DisplayObjectContainer>
+		
+		/**
+		 * Initialize XafScreenManager.
+		 * @return void
+		 */
+		public function XafScreenManager() {
+			this._screenLayers = new Dictionary();
 		}
 		
 		/**

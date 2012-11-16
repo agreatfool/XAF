@@ -45,6 +45,17 @@ package com.xenojoshua.af.resource
 			return JSON.parse(this._loader.data);
 		}
 		
+		/**
+		 * Destory this loader.
+		 * @return void
+		 */
+		public function dispose():void {
+			this._completeSignal.removeAll();
+			if (this._errorSignal) {
+				this._errorSignal.removeAll();
+			}
+		}
+		
 		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 		//-* EVENTS
 		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-

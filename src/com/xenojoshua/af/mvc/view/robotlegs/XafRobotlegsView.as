@@ -180,8 +180,7 @@ package com.xenojoshua.af.mvc.view.robotlegs
 			// remove signals
 			if (this._signals) {
 				for (var signalName:String in this._signals) {
-					var signal:NativeSignal = this._signals[signalName];
-					signal.removeAll();
+					this._signals[signalName].removeAll();
 				}
 				this._signals = null;
 			}

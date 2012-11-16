@@ -25,15 +25,24 @@ package com.xenojoshua.af.mvc.view.robotlegs
 		protected var _components:Object; // <componentName:String, movieName:String>
 		protected var _signals:Object;    // <signalName:String, signal:NativeSignal>
 		
+		protected var _hasBgMask:Boolean; // whether has a background mask drew together when this view is added to stage
+		
 		/**
 		 * Initialize XafRobotlegsView.
+		 * @param Boolean withBgMask default false, whether to draw a background mask when added to stage
 		 * @return void
 		 */
-		public function XafRobotlegsView() {
+		public function XafRobotlegsView(withBgMask:Boolean = false) {
 			super();
+			
 			this._movies     = new Object();
 			this._components = new Object();
 			this._signals    = new Object();
+			
+			if (withBgMask) {
+				this._hasBgMask = withBgMask;
+				XafMaskMaker.instance.makeMask(this);
+			}
 		}
 		
 		/**
@@ -53,6 +62,7 @@ package com.xenojoshua.af.mvc.view.robotlegs
 			}
 			this._movies[movieName] = movie;
 			this.addChild(movie);
+			XafConsole.instance.log(XafConsole.DEBUG, 'XafRootlegsView: Moive "' + movieName + '" registered!');
 			
 			return movie;
 		}
@@ -88,6 +98,7 @@ package com.xenojoshua.af.mvc.view.robotlegs
 						XafConsole.instance.log(XafConsole.WARNING, 'XafRobotlegsView: Component name "' + componentName + '" already registered!');
 					}
 					this._components[componentName] = movieName;
+					XafConsole.instance.log(XafConsole.DEBUG, 'XafRobotlegsView: Component "' + componentName + '" registered!');
 				} else {
 					XafConsole.instance.log(XafConsole.ERROR, 'XafRobotlegsView: Component with name "' + componentName + '" cannot be found in movie "' + movieName + '"');
 				}
@@ -105,7 +116,7 @@ package com.xenojoshua.af.mvc.view.robotlegs
 			var movie:MovieClip = this.getMovie(movieName);
 			if (movie) {
 				if (this._components.hasOwnProperty(componentName)) {
-					component = movie[component];
+					component = movie[componentName];
 				} else {
 					XafConsole.instance.log(XafConsole.ERROR, 'XafRobotlegsView: Component with name "' + componentName + '" cannot be found!');
 				}
@@ -135,6 +146,7 @@ package com.xenojoshua.af.mvc.view.robotlegs
 				if (this._signals.hasOwnProperty(signalName)) {
 					XafConsole.instance.log(XafConsole.WARNING, 'XafRobotlegsView: Signal name "' + signalName + '" already registered!');
 				}
+				XafConsole.instance.log(XafConsole.DEBUG, 'XafRobotlegsView: Signal "' + signalName + '" registered!');
 				this._signals[signalName] = new NativeSignal(component, eventType, event);
 			}
 		}
@@ -162,7 +174,9 @@ package com.xenojoshua.af.mvc.view.robotlegs
 		public function dispose():void {
 			// remove this view & it's mask
 			this.parent.removeChild(this);
-			XafMaskMaker.instance.removeMask(this);
+			if (this._hasBgMask) {
+				XafMaskMaker.instance.removeMask(this);
+			}
 			// remove signals
 			if (this._signals) {
 				for (var signalName:String in this._signals) {

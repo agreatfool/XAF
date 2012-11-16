@@ -106,7 +106,7 @@ package com.xenojoshua.af.utils.font
 		public function formatTextFonts(container:DisplayObjectContainer, fontName:String = null):void {
 			var totalChildNum:int = container.numChildren;
 			
-			for(var index:int = 0; index < totalChildNum; ++index) {
+			for (var index:int = 0; index < totalChildNum; ++index) {
 				var child:Object = container.getChildAt(index);
 				if (child is TextField) {
 					this.formatTextFont(child as TextField, fontName);

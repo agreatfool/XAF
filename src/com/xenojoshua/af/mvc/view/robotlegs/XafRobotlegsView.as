@@ -6,7 +6,6 @@ package com.xenojoshua.af.mvc.view.robotlegs
 	
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
-	import flash.events.Event;
 	import flash.events.IEventDispatcher;
 	import flash.events.MouseEvent;
 	
@@ -237,6 +236,7 @@ package com.xenojoshua.af.mvc.view.robotlegs
 					if (button) {
 						if (!this._currentTabName) {
 							this._currentTabName = buttonName;
+							button.selected = true;
 						}
 						this._tabs[buttonName] = buttonName;
 						XafConsole.instance.log(XafConsole.DEBUG, 'XafRobotlegsView: Tab button with name "' + buttonName + '" registered!');

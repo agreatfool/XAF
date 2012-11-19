@@ -41,7 +41,7 @@ package com.xenojoshua.af.mvc.view.button
 			
 			// format font & set text
 			if (this._buttonFont) {
-				for (var i:int= 1; i<= 5; ++i) {
+				for (var i:int = 1; i <= 5; ++i) {
 					var field:TextField = this.getButtonTextField(i);
 					if (field) {
 						XafFontManager.instance.formatTextFont(field, this._buttonFont);

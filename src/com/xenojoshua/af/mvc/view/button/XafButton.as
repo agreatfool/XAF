@@ -147,7 +147,7 @@ package com.xenojoshua.af.mvc.view.button
 		 */
 		public function showTextField(index:int):void {
 			for (var i:int = 1; i <= 5; ++i) {
-				var field:TextField = this.getButtonTextField(index);
+				var field:TextField = this.getButtonTextField(i);
 				if (!field) {
 					continue;
 				}

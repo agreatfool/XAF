@@ -37,7 +37,7 @@ package com.xenojoshua.af.mvc.view.button
 			// set params
 			this._buttonMovie = movie;
 			this._buttonText = text;
-			this._buttonFont = fontName ? fontName : XafFontManager.instance.defaultChineseFont;
+			this._buttonFont = fontName;
 			
 			// format font & set text
 			if (this._buttonFont) {

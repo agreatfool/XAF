@@ -88,13 +88,14 @@ package com.xenojoshua.af.utils.font
 			
 			if (fontName == null) {
 				format.font = this._defaultChineseFont;
+				field.embedFonts = false;
 			} else {
 				format.font = fontName;
+				field.embedFonts = true;
 			}
 			
 			field.setTextFormat(format);
 			field.defaultTextFormat = format;
-			field.embedFonts = true;
 		}
 		
 		/**

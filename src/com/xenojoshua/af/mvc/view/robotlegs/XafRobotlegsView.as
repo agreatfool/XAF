@@ -151,9 +151,7 @@ package com.xenojoshua.af.mvc.view.robotlegs
 					if (this._buttons.hasOwnProperty(buttonName)) {
 						XafConsole.instance.log(XafConsole.WARNING, 'XafRobotlegsView: XafButton name "' + buttonName + '" already registered!');
 					}
-					var button:XafButton = new XafButton(buttonMovie, text, fontName);
-					button.registerClickCallback(this.onTabButtonClick);
-					this._buttons[buttonName] = button;
+					this._buttons[buttonName] = new XafButton(buttonMovie, text, fontName);
 					XafConsole.instance.log(XafConsole.DEBUG, 'XafRobotlegsView: XafButton "' + buttonName + '" registered!');
 				} else {
 					XafConsole.instance.log(XafConsole.ERROR, 'XafRobotlegsView: XafButton with name "' + buttonName + '" cannot be found in movie "' + movieName + '"');
@@ -238,6 +236,7 @@ package com.xenojoshua.af.mvc.view.robotlegs
 							this._currentTabName = buttonName;
 							button.selected = true;
 						}
+						button.registerClickCallback(this.onTabButtonClick);
 						this._tabs[buttonName] = buttonName;
 						XafConsole.instance.log(XafConsole.DEBUG, 'XafRobotlegsView: Tab button with name "' + buttonName + '" registered!');
 					} else {

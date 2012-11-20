@@ -14,7 +14,6 @@ package com.xenojoshua.af.resource
 	
 	import flash.display.DisplayObject;
 	import flash.display.MovieClip;
-	import flash.utils.Dictionary;
 	
 	import org.osflash.signals.Signal;
 
@@ -201,14 +200,20 @@ package com.xenojoshua.af.resource
 		 * @return void
 		 */
 		public function dispose():void {
-			this._loader      = null;
+			// remove loading list
 			this._loadingList = null;
+			// remove signal actions
 			this._completeSignal.removeAll();
 			this._errorSignal.removeAll();
+			// remove loaded content & destory LoaderMax
+			if (this._loader) {
+				this._loader = null;
+			}
+			// remove & destory loading bar
 			if (this._loadingBar) {
 				this.hideLoadingBar();
 				this._loadingBar.dispose();
-				this._loadingBar  = null;
+				this._loadingBar = null;
 			}
 		}
 		
@@ -267,7 +272,8 @@ package com.xenojoshua.af.resource
 				for (var rsName:String in this._loadingList) {
 					this.appendLoader(
 						this.getAbsoluteUrl(this._resources[rsName].url),
-						this._resources[rsName].type
+						this._resources[rsName].type,
+						this._resources[rsName].size
 					);
 				}
 				if (this._loadingBar) {
@@ -292,7 +298,8 @@ package com.xenojoshua.af.resource
 					this._loadingList[rsName] = this._resources[rsName].type;
 					this.appendLoader(
 						this.getAbsoluteUrl(this._resources[rsName].url),
-						this._resources[rsName].type
+						this._resources[rsName].type,
+						this._resources[rsName].size
 					);
 					isThereAnyPreload = true;
 				}
@@ -318,18 +325,25 @@ package com.xenojoshua.af.resource
 		 * Append appropriate loader into LoaderMax.
 		 * @param String url
 		 * @param String type
+		 * @param Number size
 		 * @return void
 		 */
-		private function appendLoader(url:String, type:String):void {
+		private function appendLoader(url:String, type:String, size:Number):void {
+			var vars:Object = {name: url};
+			if (size) {
+				vars.estimatedBytes = size;
+				vars.onProgress = this.onSingleProgress;
+			}
+			
 			if (type == this._validTypes.swf
 				|| type == this._validTypes.font) {
-				this._loader.append(new SWFLoader(url));
+				this._loader.append(new SWFLoader(url, vars));
 			} else if (type == this._validTypes.xml
 				|| type == this._validTypes.json
 				|| type == this._validTypes.config) {
-				this._loader.append(new DataLoader(url));
+				this._loader.append(new DataLoader(url, vars));
 			} else {
-				this._loader.append(new ImageLoader(url));
+				this._loader.append(new ImageLoader(url, vars));
 			}
 		}
 		
@@ -376,17 +390,29 @@ package com.xenojoshua.af.resource
 		}
 		
 		/**
-		 * Resources loading progress.
+		 * Global total resources loading progress.
 		 * @param LoaderEvent e
 		 * @return void
 		 */
-		private function onProgress(e:LoaderEvent):void {
-			//XafConsole.instance.log(XafConsole.INFO, "Resources bytes loaded: " + this._loader.bytesLoaded);
-			//XafConsole.instance.log(XafConsole.INFO, "Resource loading progress: " + e.target.progress);
-//			trace(e.target.toString());
-//			if (this._loadingBar) {
-//				this._loadingBar.updateProgressBar(e.target);
-//			}
+		private function onTotalProgress(e:LoaderEvent):void {
+			if (this._loadingBar) {
+				//trace('Total progress: loaded: ' + e.target.bytesLoaded + ', total: ' + e.target.bytesTotal); // this code can make loading bar a bit slow to be finished
+				this._loadingBar.updateProgressBar(e.target.bytesLoaded, e.target.bytesTotal);
+			}
+		}
+		
+		/**
+		 * Single resource loading progress.
+		 * @param LoaderEvent e
+		 * @return void
+		 */
+		private function onSingleProgress(e:LoaderEvent):void {
+			// e.target is possible to be SWFLoader | ImageLoader | DataLoader etc...
+			if (e.target.bytesLoaded == e.target.bytesTotal) {
+				var url:String = e.target.name;
+				var resourceName:String = url.substr(url.lastIndexOf('/') + 1);
+				XafConsole.instance.log(XafConsole.DEBUG, 'XafRsManager: On resource progress "' + resourceName + '", size: ' + e.target.bytesTotal + ', consumed: ' + e.target.loadTime + ' (seconds)!');
+			}
 		}
 		
 		/**
@@ -414,7 +440,7 @@ package com.xenojoshua.af.resource
 				this._loaderVars = new Object();
 			}
 			this._loaderVars.onComplete     = (onSucceed == null)  ? this.onSucceed  : onSucceed;
-			this._loaderVars.onProgress     = (onProgress == null) ? this.onProgress : onProgress;
+			this._loaderVars.onProgress     = (onProgress == null) ? this.onTotalProgress : onProgress;
 			this._loaderVars.onError        = (onError == null)    ? this.onError    : onError;
 			this._loaderVars.name           = name;
 			this._loaderVars.auditSize      = auditSize;

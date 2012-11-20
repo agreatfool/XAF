@@ -16,10 +16,6 @@ package com.xenojoshua.af.resource
 		private var _movie:MovieClip;
 		private var _background:Sprite;
 		
-		private var _totalBytes:Number;
-		private var _targetList:Object;   // <resourceName:String, resourceTotalSize:Number>
-		private var _progressList:Object; // <resourceName:String, loadedSize:Number>
-		
 		/**
 		 * Initialize XafRsProgressBar.
 		 * @param MovieClip movie default null, loading bar animation
@@ -28,40 +24,8 @@ package com.xenojoshua.af.resource
 		 * @return void
 		 */
 		public function XafRsProgressBar(movie:MovieClip = null, background:DisplayObject = null, alpha:Number = 0.0) {
-			this._totalBytes   = 0;
-			this._targetList   = new Object();
-			this._progressList = new Object();
-			
 			this.drawBackground(background, alpha);
 			this.drawLoadingBar(movie);
-		}
-		
-		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-		//-* DATA INITIALIZATION
-		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-		/**
-		 * Set resource target into progress bar.
-		 * @param String name
-		 * @param Number bytes
-		 * @return void
-		 */
-		public function setTarget(name:String, bytes:Number):void {
-			this._targetList[name] = bytes;
-			this._progressList[name] = 0;
-		}
-		
-		/**
-		 * Set resource targets into progress bar.
-		 * @param Object targets 'name:String => bytes:Number'
-		 * @return void
-		 */
-		public function setTargets(targets:Object):void {
-			if (targets) {
-				for (var name:String in targets) {
-					this._targetList[name] = targets[name];
-					this._progressList[name] = 0;
-				}
-			}
 		}
 		
 		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -72,8 +36,8 @@ package com.xenojoshua.af.resource
 		 * @param String name
 		 * @return void
 		 */
-		public function updateProgressBar(name:String = null):void {
-			var progress:Number = (name == null) ? this.getTotalProgress() : this.getTargetProgress(name);
+		public function updateProgressBar(bytesLoaded:Number, bytesTotal:Number):void {
+			var progress:Number = Math.round(bytesLoaded / bytesTotal * 100);
 			
 			if (progress < 1) {
 				progress = 1;
@@ -84,60 +48,6 @@ package com.xenojoshua.af.resource
 			this._movie.gotoAndStop(progress);
 		}
 		
-		/**
-		 * Get specified target loaded progress.
-		 * @param String name
-		 * @return Number progress e.g. 0.23 => 23%
-		 */
-		private function getTargetProgress(name:String):Number {
-			var progress:Number = 0;
-			
-			if (this._progressList.hasOwnProperty(name)) {
-				progress = Math.round(this._progressList[name] / this._targetList[name] * 100);
-			}
-			
-			return progress;
-		}
-		
-		/**
-		 * Get total loaded progress.
-		 * @return Number progress e.g. 0.23 => 23%
-		 */
-		private function getTotalProgress():Number {
-			var progress:Number = 0;
-			
-			if (this._progressList && this._totalBytes) {
-				var currentTargetLoaded:Number = 0;
-				for (var name:String in this._progressList) {
-					currentTargetLoaded += this._progressList[name];
-				}
-				progress = Math.round(currentTargetLoaded / this._totalBytes * 100);
-			}
-			
-			return progress;
-		}
-		
-		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-		//-* ON PROGRESS EVENT
-		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
-		/**
-		 * Set target loaded bytes on progress.
-		 * @param String name
-		 * @param Number bytes
-		 * @param Boolean updateCurrent default false, whether update the progress bar according to current target loading progress
-		 * @return void
-		 */
-		public function setTargetProgressBytes(name:String, bytes:Number, updateCurrent:Boolean = false):void {
-			if (this._progressList.hasOwnProperty(name)) {
-				this._progressList[name] = Math.round(bytes);
-			}
-			if (updateCurrent) {
-				this.updateProgressBar(name);
-			} else {
-				this.updateProgressBar();
-			}
-		}
-		
 		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 		//-* UTILITIES
 		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -146,11 +56,10 @@ package com.xenojoshua.af.resource
 		 * @return void
 		 */
 		public function dispose():void {
-			this._totalBytes   = 0;
-			this._targetList   = null;
-			this._progressList = null;
-			this._movie        = null;
-			this._background   = null;
+			this.removeChild(this._movie);
+			this.removeChild(this._background);
+			this._movie = null;
+			this._background = null;
 		}
 		
 		/**
@@ -187,6 +96,8 @@ package com.xenojoshua.af.resource
 			}
 			this._movie.stop();
 			
+			this._movie.x = this._background.width / 2;
+			this._movie.y = this._background.height / 2;
 			this.addChild(this._movie);
 		}
 	}

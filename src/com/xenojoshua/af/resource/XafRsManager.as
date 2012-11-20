@@ -6,7 +6,9 @@ package com.xenojoshua.af.resource
 	import com.greensock.loading.LoaderMax;
 	import com.greensock.loading.SWFLoader;
 	import com.xenojoshua.af.config.XafConfig;
+	import com.xenojoshua.af.constant.XafConst;
 	import com.xenojoshua.af.exception.XafException;
+	import com.xenojoshua.af.mvc.view.screen.XafScreenManager;
 	import com.xenojoshua.af.utils.console.XafConsole;
 	import com.xenojoshua.af.utils.font.XafFontManager;
 	
@@ -32,7 +34,9 @@ package com.xenojoshua.af.resource
 		 * Usage:
 		 * ----------------------------------------------------------------
 		 * There should be one more class in your application to store resource configs.
+		 * (Also, resource configs can come from some resource file to be loaded via XafInitLoader, e.g. resources.json)
 		 * Please refer to class "XafIRsConfig".
+		 * XafRsManager.instance.initializeLoadingBar(movie, background, alpha); (If you want a loading bar)
 		 * XafRsManager.instance.registerResources(configs);
 		 * XafRsManager.instance.registerCompleteSignal(onComplete).registerErrorSignal(onError);
 		 * XafRsManager.instance.prepareLoading(['resourceA', 'resourceB', ...]).startLoading();
@@ -78,10 +82,10 @@ package com.xenojoshua.af.resource
 			this._errorSignal    = new Signal();
 		}
 		
-		private var _loader:LoaderMax; // used to handle loaded content after load action
-		private var _loaderVars:Object; // LoaderMax vars
+		private var _loader:LoaderMax;   // used to handle loaded content after load action
+		private var _loaderVars:Object;  // LoaderMax vars
 		
-		private var _swfLoaders:Object; // <name:String, loader:SWFLoader>
+		private var _swfLoaders:Object;  // <name:String, loader:SWFLoader>
 		private var _loadingList:Object; // <name:String, type:String>
 		private var _validTypes:Object = {
 			swf:    'swf',
@@ -91,10 +95,12 @@ package com.xenojoshua.af.resource
 			json:   'json',
 			image:  'image'
 		};
-		private var _resources:Object; // <name:String, config:Object>
+		private var _resources:Object;   // <name:String, config:Object>
 		
 		private var _completeSignal:Signal;
 		private var _errorSignal:Signal;
+		
+		private var _loadingBar:XafRsProgressBar;
 		
 		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 		//-* RESOURCE CONFIG APIS
@@ -154,6 +160,40 @@ package com.xenojoshua.af.resource
 		}
 		
 		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+		//-* LOADING PROGRESS BAR
+		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+		/**
+		 * Initialize loading progress bar.
+		 * @param MovieClip movie default null, loading bar animation
+		 * @param DisplayObject background default null, background image
+		 * @param Number alpha default 0.0, means background is transparent, background alpha value
+		 * @return void
+		 */
+		public function initializeLoadingBar(movie:MovieClip = null, background:DisplayObject = null, alpha:Number = 0.0):void {
+			this._loadingBar = new XafRsProgressBar(movie, background, alpha);
+		}
+		
+		/**
+		 * Display the loading progress bar.
+		 * @return void
+		 */
+		private function showLoadingBar():void {
+			if (this._loadingBar) {
+				XafScreenManager.instance.getLayer(XafConst.SCREEN_POPUP).addChild(this._loadingBar);
+			}
+		}
+		
+		/**
+		 * Hide the loading progress bar.
+		 * @return void
+		 */
+		public function hideLoadingBar():void {
+			if (this._loadingBar && this._loadingBar.parent) {
+				this._loadingBar.parent.removeChild(this._loadingBar);
+			}
+		}
+		
+		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 		//-* EVENT APIS
 		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 		/**
@@ -161,10 +201,15 @@ package com.xenojoshua.af.resource
 		 * @return void
 		 */
 		public function dispose():void {
-			this._loadingList = [];
-			this._loader = null;
+			this._loader      = null;
+			this._loadingList = null;
 			this._completeSignal.removeAll();
 			this._errorSignal.removeAll();
+			if (this._loadingBar) {
+				this.hideLoadingBar();
+				this._loadingBar.dispose();
+				this._loadingBar  = null;
+			}
 		}
 		
 		/**
@@ -225,6 +270,9 @@ package com.xenojoshua.af.resource
 						this._resources[rsName].type
 					);
 				}
+				if (this._loadingBar) {
+					this.showLoadingBar();
+				}
 				this._loader.load();
 			}
 		}
@@ -250,6 +298,9 @@ package com.xenojoshua.af.resource
 				}
 			}
 			if (isThereAnyPreload) {
+				if (this._loadingBar) {
+					this.showLoadingBar();
+				}
 				this._loader.load();
 			}
 		}
@@ -332,6 +383,10 @@ package com.xenojoshua.af.resource
 		private function onProgress(e:LoaderEvent):void {
 			//XafConsole.instance.log(XafConsole.INFO, "Resources bytes loaded: " + this._loader.bytesLoaded);
 			//XafConsole.instance.log(XafConsole.INFO, "Resource loading progress: " + e.target.progress);
+//			trace(e.target.toString());
+//			if (this._loadingBar) {
+//				this._loadingBar.updateProgressBar(e.target);
+//			}
 		}
 		
 		/**

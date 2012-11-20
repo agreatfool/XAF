@@ -6,7 +6,6 @@ package com.xenojoshua.af.mvc.view.screen
 	
 	import flash.display.DisplayObjectContainer;
 	import flash.display.Sprite;
-	import flash.utils.Dictionary;
 
 	public class XafScreenManager
 	{
@@ -23,14 +22,14 @@ package com.xenojoshua.af.mvc.view.screen
 			return XafScreenManager._mgr;
 		}
 		
-		private var _screenLayers:Dictionary; // <name:String, layer:DisplayObjectContainer>
+		private var _screenLayers:Object; // <name:String, layer:DisplayObjectContainer>
 		
 		/**
 		 * Initialize XafScreenManager.
 		 * @return void
 		 */
 		public function XafScreenManager() {
-			this._screenLayers = new Dictionary();
+			this._screenLayers = new Object();
 		}
 		
 		/**
@@ -53,7 +52,7 @@ package com.xenojoshua.af.mvc.view.screen
 			if (!isRootLayer) {
 				var rootLayer:DisplayObjectContainer = this._screenLayers[XafConst.SCREEN_ROOT];
 				if (null == layer) {
-					layer = new Sprite();
+					layer = new XafScreen();
 					layer.mouseEnabled = mouseEnabled;
 				}
 				if (rootLayer) {

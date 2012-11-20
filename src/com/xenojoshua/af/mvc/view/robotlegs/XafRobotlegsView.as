@@ -8,6 +8,7 @@ package com.xenojoshua.af.mvc.view.robotlegs
 	import flash.display.Sprite;
 	import flash.events.IEventDispatcher;
 	import flash.events.MouseEvent;
+	import flash.utils.getQualifiedClassName;
 	
 	import org.osflash.signals.natives.NativeSignal;
 	
@@ -31,6 +32,7 @@ package com.xenojoshua.af.mvc.view.robotlegs
 		 */
 		public function XafRobotlegsView(withBgMask:Boolean = false) {
 			super();
+			XafConsole.instance.log(XafConsole.INFO, 'XafRobotlegsView: View "' + flash.utils.getQualifiedClassName(this) + '" start to loading!');
 			
 			this._movies     = new Object();
 			this._components = new Object();

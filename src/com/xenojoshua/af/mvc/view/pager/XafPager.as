@@ -1,7 +1,7 @@
 package com.xenojoshua.af.mvc.view.pager
 {
 	import com.greensock.TweenLite;
-	import com.xenojoshua.af.utils.display.XafDisplayUtil;
+	import com.xenojoshua.af.mvc.view.utils.XafDisplayUtil;
 	
 	import flash.display.DisplayObject;
 	import flash.display.InteractiveObject;

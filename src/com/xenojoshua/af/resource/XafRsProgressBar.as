@@ -1,7 +1,7 @@
 package com.xenojoshua.af.resource
 {
 	import com.xenojoshua.af.config.XafConfig;
-	import com.xenojoshua.af.utils.display.XafDisplayUtil;
+	import com.xenojoshua.af.mvc.view.utils.XafDisplayUtil;
 	
 	import flash.display.DisplayObject;
 	import flash.display.Graphics;

@@ -1,4 +1,4 @@
-package com.xenojoshua.af.utils.display
+package com.xenojoshua.af.mvc.view.utils
 {
 	import com.greensock.TweenMax;
 	import com.xenojoshua.af.config.XafConfig;

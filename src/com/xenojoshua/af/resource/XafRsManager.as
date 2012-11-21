@@ -9,6 +9,7 @@ package com.xenojoshua.af.resource
 	import com.xenojoshua.af.constant.XafConst;
 	import com.xenojoshua.af.exception.XafException;
 	import com.xenojoshua.af.mvc.view.screen.XafScreenManager;
+	import com.xenojoshua.af.utils.XafUtil;
 	import com.xenojoshua.af.utils.console.XafConsole;
 	import com.xenojoshua.af.utils.font.XafFontManager;
 	
@@ -47,7 +48,8 @@ package com.xenojoshua.af.resource
 		 * Resource of type 'swf' would be registered in this XafRsManager.
 		 * Resource of type 'font' would be registered in the XafFontManager.
 		 * Resource of type 'config' would be registered in the XafConfig.
-		 * Resource of type 'image' | 'xml' | 'json' will not be processed by default.
+		 * Resource of type 'image' would be registered in the XafImageManager.
+		 * Resource of type 'xml' | 'json' will not be processed by default.
 		 * 
 		 * Resources have to be processed before "this.dispose()" function called.
 		 * (XML or JSON can be added into XafConfig, etc...)
@@ -158,6 +160,20 @@ package com.xenojoshua.af.resource
 			return config;
 		}
 		
+		/**
+		 * Get resource config according to resource name.
+		 * @param String name
+		 * @return Object config
+		 */
+		public function getResourceConfig(name:String):Object {
+			var config:Object = null;
+			if (this._resources.hasOwnProperty(name)) {
+				config = this._resources[name];
+			}
+			
+			return config;
+		}
+		
 		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 		//-* LOADING PROGRESS BAR
 		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
@@ -253,7 +269,9 @@ package com.xenojoshua.af.resource
 						XafConsole.instance.log(XafConsole.WARNING, 'XafRsManager: Config of resouce "' + rsName + '" not registered!');
 						continue; // if resource config not registered, skip it
 					}
-					this._loadingList[rsName] = config.type;
+					if (!this.checkIsLoaded(rsName, config)) {
+						this._loadingList[rsName] = config.type;
+					}
 				}
 			}
 			
@@ -271,7 +289,7 @@ package com.xenojoshua.af.resource
 				}
 				for (var rsName:String in this._loadingList) {
 					this.appendLoader(
-						this.getAbsoluteUrl(this._resources[rsName].url),
+						XafUtil.getAbsoluteMediaUrl(this._resources[rsName].url),
 						this._resources[rsName].type,
 						this._resources[rsName].size
 					);
@@ -297,7 +315,7 @@ package com.xenojoshua.af.resource
 				if (this._resources[rsName].preload) {
 					this._loadingList[rsName] = this._resources[rsName].type;
 					this.appendLoader(
-						this.getAbsoluteUrl(this._resources[rsName].url),
+						XafUtil.getAbsoluteMediaUrl(this._resources[rsName].url),
 						this._resources[rsName].type,
 						this._resources[rsName].size
 					);
@@ -310,15 +328,6 @@ package com.xenojoshua.af.resource
 				}
 				this._loader.load();
 			}
-		}
-		
-		/**
-		 * Get absolute url according to relative url.
-		 * @param String url
-		 * @return String url
-		 */
-		private function getAbsoluteUrl(url:String):String {
-			return XafConfig.instance.mediaHost + url;
 		}
 		
 		/**
@@ -348,6 +357,27 @@ package com.xenojoshua.af.resource
 		}
 		
 		/**
+		 * Check target resource already loaded or not.
+		 * @param String name
+		 * @param Object config
+		 * @return Boolean isLoaded
+		 */
+		private function checkIsLoaded(name:String, config:Object):Boolean {
+			var isLoaded:Boolean = false;
+			
+			if (config.type == this._validTypes.swf
+				|| config.type == this._validTypes.font) {
+				isLoaded = this.getSwfLoader(name) == null ? false : true;
+			} else if (config.type == this._validTypes.config) {
+				isLoaded = XafConfig.instance.loadConfigs(config.config) == null ? false : true;
+			} else {
+				isLoaded = XafImageManager.instance.getImage(name) == null ? false : true;
+			}
+			
+			return isLoaded;
+		}
+		
+		/**
 		 * Resources completely loaded, register swfs into manager.
 		 * And dispatch XafRsManager into all registered signals.
 		 * @param LoaderEvent e
@@ -373,6 +403,9 @@ package com.xenojoshua.af.resource
 				} else if (this._loadingList[rsName] == this._validTypes.config) {
 					// register config resource
 					XafConfig.instance.registerConfigs(this._resources[rsName].config, this.getJSON(rsName));
+				} else if (this._loadingList[rsName] == this._validTypes.image) {
+					// register image resource
+					XafImageManager.instance.registerImage(rsName, this.getImage(rsName));
 				}
 			}
 			
@@ -508,7 +541,7 @@ package com.xenojoshua.af.resource
 		 * @return XML xml
 		 */
 		public function getXML(name:String):XML {
-			return this._loader.getContent(this.getAbsoluteUrl(this._resources[name].url)) as XML;
+			return this._loader.getContent(XafUtil.getAbsoluteMediaUrl(this._resources[name].url)) as XML;
 		}
 		
 		/**
@@ -517,7 +550,7 @@ package com.xenojoshua.af.resource
 		 * @return Object json
 		 */
 		public function getJSON(name:String):Object {
-			return JSON.parse(this._loader.getContent(this.getAbsoluteUrl(this._resources[name].url)));
+			return JSON.parse(this._loader.getContent(XafUtil.getAbsoluteMediaUrl(this._resources[name].url)));
 		}
 		
 		/**
@@ -526,7 +559,7 @@ package com.xenojoshua.af.resource
 		 * @return DisplayObject image
 		 */
 		public function getImage(name:String):DisplayObject {
-			return this._loader.getContent(this.getAbsoluteUrl(this._resources[name].url)) as DisplayObject;
+			return this._loader.getContent(XafUtil.getAbsoluteMediaUrl(this._resources[name].url)) as DisplayObject;
 		}
 		
 		/**
@@ -546,7 +579,7 @@ package com.xenojoshua.af.resource
 		 * @return SWFLoader loader
 		 */
 		private function getContentAsSwfLoader(name:String):SWFLoader {
-			return this._loader.getLoader(this.getAbsoluteUrl(this._resources[name].url)) as SWFLoader;
+			return this._loader.getLoader(XafUtil.getAbsoluteMediaUrl(this._resources[name].url)) as SWFLoader;
 		}
 	}
 }

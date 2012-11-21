@@ -1,6 +1,6 @@
 package com.xenojoshua.af.utils
 {
-	import com.xenojoshua.af.config.XafConfig;
+	import com.xenojoshua.af.resource.manager.XafConfigManager;
 
 	public class XafUtil
 	{
@@ -10,7 +10,7 @@ package com.xenojoshua.af.utils
 		 * @return String url
 		 */
 		public static function getAbsoluteMediaUrl(url:String):String {
-			return XafConfig.instance.mediaHost + url;
+			return XafConfigManager.instance.mediaHost + url;
 		}
 	}
 }

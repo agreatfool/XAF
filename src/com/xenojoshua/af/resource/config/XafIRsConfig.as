@@ -1,4 +1,4 @@
-package com.xenojoshua.af.resource
+package com.xenojoshua.af.resource.config
 {
 	public interface XafIRsConfig
 	{

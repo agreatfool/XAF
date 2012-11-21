@@ -1,6 +1,6 @@
 package com.xenojoshua.af.resource
 {
-	import com.xenojoshua.af.config.XafConfig;
+	import com.xenojoshua.af.resource.manager.XafConfigManager;
 	import com.xenojoshua.af.mvc.view.utils.XafDisplayUtil;
 	
 	import flash.display.DisplayObject;
@@ -74,7 +74,7 @@ package com.xenojoshua.af.resource
 			if (bg == null) {
 				var graph:Graphics = this._background.graphics;
 				graph.beginFill(0x000000, alpha);
-				graph.drawRect(0, 0, XafConfig.instance.stageWidth, XafConfig.instance.stageHeight);
+				graph.drawRect(0, 0, XafConfigManager.instance.stageWidth, XafConfigManager.instance.stageHeight);
 				graph.endFill();
 			} else {
 				this._background.addChild(bg);

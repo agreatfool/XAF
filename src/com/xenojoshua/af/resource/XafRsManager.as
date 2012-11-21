@@ -5,7 +5,7 @@ package com.xenojoshua.af.resource
 	import com.greensock.loading.ImageLoader;
 	import com.greensock.loading.LoaderMax;
 	import com.greensock.loading.SWFLoader;
-	import com.xenojoshua.af.config.XafConfig;
+	import com.xenojoshua.af.resource.manager.XafConfigManager;
 	import com.xenojoshua.af.constant.XafConst;
 	import com.xenojoshua.af.exception.XafException;
 	import com.xenojoshua.af.mvc.view.screen.XafScreenManager;
@@ -17,6 +17,7 @@ package com.xenojoshua.af.resource
 	import flash.display.MovieClip;
 	
 	import org.osflash.signals.Signal;
+	import com.xenojoshua.af.resource.manager.XafImageManager;
 
 	public class XafRsManager
 	{
@@ -369,7 +370,7 @@ package com.xenojoshua.af.resource
 				|| config.type == this._validTypes.font) {
 				isLoaded = this.getSwfLoader(name) == null ? false : true;
 			} else if (config.type == this._validTypes.config) {
-				isLoaded = XafConfig.instance.loadConfigs(config.config) == null ? false : true;
+				isLoaded = XafConfigManager.instance.loadConfigs(config.config) == null ? false : true;
 			} else {
 				isLoaded = XafImageManager.instance.getImage(name) == null ? false : true;
 			}
@@ -402,7 +403,7 @@ package com.xenojoshua.af.resource
 					}
 				} else if (this._loadingList[rsName] == this._validTypes.config) {
 					// register config resource
-					XafConfig.instance.registerConfigs(this._resources[rsName].config, this.getJSON(rsName));
+					XafConfigManager.instance.registerConfigs(this._resources[rsName].config, this.getJSON(rsName));
 				} else if (this._loadingList[rsName] == this._validTypes.image) {
 					// register image resource
 					XafImageManager.instance.registerImage(rsName, this.getImage(rsName));

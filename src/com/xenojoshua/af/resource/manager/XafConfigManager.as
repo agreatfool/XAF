@@ -1,28 +1,28 @@
-package com.xenojoshua.af.config
+package com.xenojoshua.af.resource.manager
 {
 	import com.xenojoshua.af.exception.XafException;
 	import com.xenojoshua.af.utils.console.XafConsole;
 
-	public class XafConfig
+	public class XafConfigManager
 	{
-		private static var _config:XafConfig;
+		private static var _config:XafConfigManager;
 		
 		/**
 		 * Get instance of XafConfig.
 		 * @return XafConfig _config
 		 */
-		public static function get instance():XafConfig {
-			if (!XafConfig._config) {
-				XafConfig._config = new XafConfig();
+		public static function get instance():XafConfigManager {
+			if (!XafConfigManager._config) {
+				XafConfigManager._config = new XafConfigManager();
 			}
-			return XafConfig._config;
+			return XafConfigManager._config;
 		}
 		
 		/**
 		 * Initialize XafConfig.
 		 * @return void
 		 */
-		public function XafConfig() {
+		public function XafConfigManager() {
 			this._configs = new Object();
 		}
 		

@@ -1,4 +1,4 @@
-package com.xenojoshua.af.resource
+package com.xenojoshua.af.resource.manager
 {
 	import com.xenojoshua.af.mvc.view.utils.XafDisplayUtil;
 	import com.xenojoshua.af.utils.XafUtil;
@@ -9,6 +9,7 @@ package com.xenojoshua.af.resource
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.net.URLRequest;
+	import com.xenojoshua.af.resource.XafRsManager;
 
 	public class XafImageManager
 	{

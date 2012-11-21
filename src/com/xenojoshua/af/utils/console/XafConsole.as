@@ -1,6 +1,6 @@
 package com.xenojoshua.af.utils.console
 {
-	import com.xenojoshua.af.config.XafConfig;
+	import com.xenojoshua.af.resource.manager.XafConfigManager;
 	import com.xenojoshua.af.constant.XafConst;
 	import com.xenojoshua.af.mvc.view.screen.XafScreenManager;
 	import com.xenojoshua.af.exception.XafException;
@@ -180,7 +180,7 @@ package com.xenojoshua.af.utils.console
 			if (this._settings.consolePosId <= 1) { // top
 				this.y = 0;
 			} else if (this._settings.consolePosId >= 2) { // bottom
-				this.y = XafConfig.instance.stageHeight - this._settings.consoleHeight;
+				this.y = XafConfigManager.instance.stageHeight - this._settings.consoleHeight;
 			}
 			this.mouseEnabled = false;
 			this.scaleX = this.scaleY = 1; // set it back to 1, since it will be calculated to bigger than 1 
@@ -227,13 +227,13 @@ package com.xenojoshua.af.utils.console
 			this._consoleField.text = "-----console-----";
 			this._consoleField.alpha = this._settings.consoleFieldAlpha;
 			
-			this._consoleField.width = XafConfig.instance.stageWidth - this._settings.fpStatsWidth;
+			this._consoleField.width = XafConfigManager.instance.stageWidth - this._settings.fpStatsWidth;
 			this._consoleField.height = this._settings.consoleHeight;
 			
 			if (-1 != [0, 2].indexOf(this._settings.consolePosId)) { // left
 				this._consoleField.x = this._settings.fpStatsWidth;
 			} else if (-1 != [1, 3].indexOf(this._settings.consolePosId)) { // right
-				this._consoleField.x = XafConfig.instance.stageWidth - this._settings.fpStatsWidth;
+				this._consoleField.x = XafConfigManager.instance.stageWidth - this._settings.fpStatsWidth;
 			}
 			
 			this.addChild(this._consoleField);

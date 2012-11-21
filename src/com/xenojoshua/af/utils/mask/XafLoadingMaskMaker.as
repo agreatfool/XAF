@@ -1,6 +1,6 @@
 package com.xenojoshua.af.utils.mask
 {
-	import com.xenojoshua.af.config.XafConfig;
+	import com.xenojoshua.af.resource.manager.XafConfigManager;
 	import com.xenojoshua.af.constant.XafConst;
 	import com.xenojoshua.af.resource.XafRsManager;
 	import com.xenojoshua.af.mvc.view.screen.XafScreenManager;
@@ -93,7 +93,7 @@ package com.xenojoshua.af.utils.mask
 			var movie:Sprite = new Sprite();
 			
 			movie.graphics.beginFill(0x000000, 0.3);
-			movie.graphics.drawRect(0, 0, XafConfig.instance.stageWidth, XafConfig.instance.stageHeight);
+			movie.graphics.drawRect(0, 0, XafConfigManager.instance.stageWidth, XafConfigManager.instance.stageHeight);
 			movie.graphics.endFill();
 			
 			var loadingMovie:MovieClip = XafRsManager.instance.getMovieClipInSwf(this._loadingSwfName, this._loadingClassName);

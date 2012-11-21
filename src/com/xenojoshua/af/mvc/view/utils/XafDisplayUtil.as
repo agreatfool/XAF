@@ -1,7 +1,7 @@
 package com.xenojoshua.af.mvc.view.utils
 {
 	import com.greensock.TweenMax;
-	import com.xenojoshua.af.config.XafConfig;
+	import com.xenojoshua.af.resource.manager.XafConfigManager;
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -23,8 +23,8 @@ package com.xenojoshua.af.mvc.view.utils
 				return;
 			}
 			
-			var positionW:uint = XafConfig.instance.stageWidth;
-			var positionH:uint = XafConfig.instance.stageHeight;
+			var positionW:uint = XafConfigManager.instance.stageWidth;
+			var positionH:uint = XafConfigManager.instance.stageHeight;
 			
 			var maxDisplayW:int = Math.min(positionW, display.width);
 			var maxDisplayH:int = Math.min(positionH, display.height);
@@ -87,8 +87,8 @@ package com.xenojoshua.af.mvc.view.utils
 			if (!display) {
 				return;
 			}
-			var stageWidth:int  = XafConfig.instance.stageWidth;
-			var stageHeight:int = XafConfig.instance.stageHeight;
+			var stageWidth:int  = XafConfigManager.instance.stageWidth;
+			var stageHeight:int = XafConfigManager.instance.stageHeight;
 			
 			var originalWidth:int  = display.width;
 			var originalHeight:int = display.height;

@@ -5,10 +5,12 @@ package com.xenojoshua.af.resource
 	import com.greensock.loading.ImageLoader;
 	import com.greensock.loading.LoaderMax;
 	import com.greensock.loading.SWFLoader;
-	import com.xenojoshua.af.resource.manager.XafConfigManager;
 	import com.xenojoshua.af.constant.XafConst;
 	import com.xenojoshua.af.exception.XafException;
 	import com.xenojoshua.af.mvc.view.screen.XafScreenManager;
+	import com.xenojoshua.af.resource.manager.XafConfigManager;
+	import com.xenojoshua.af.resource.manager.XafImageManager;
+	import com.xenojoshua.af.resource.manager.XafSwfManager;
 	import com.xenojoshua.af.utils.XafUtil;
 	import com.xenojoshua.af.utils.console.XafConsole;
 	import com.xenojoshua.af.utils.font.XafFontManager;
@@ -17,7 +19,6 @@ package com.xenojoshua.af.resource
 	import flash.display.MovieClip;
 	
 	import org.osflash.signals.Signal;
-	import com.xenojoshua.af.resource.manager.XafImageManager;
 
 	public class XafRsManager
 	{
@@ -48,9 +49,8 @@ package com.xenojoshua.af.resource
 		 * ----------------------------------------------------------------
 		 * Resource of type 'swf' would be registered in this XafRsManager.
 		 * Resource of type 'font' would be registered in the XafFontManager.
-		 * Resource of type 'config' would be registered in the XafConfig.
+		 * Resource of type 'config' would be registered in the XafConfig (JSON format).
 		 * Resource of type 'image' would be registered in the XafImageManager.
-		 * Resource of type 'xml' | 'json' will not be processed by default.
 		 * 
 		 * Resources have to be processed before "this.dispose()" function called.
 		 * (XML or JSON can be added into XafConfig, etc...)
@@ -93,8 +93,6 @@ package com.xenojoshua.af.resource
 			swf:    'swf',
 			font:   'font',
 			config: 'config',
-			xml:    'xml',
-			json:   'json',
 			image:  'image'
 		};
 		private var _resources:Object;   // <name:String, config:Object>
@@ -203,7 +201,7 @@ package com.xenojoshua.af.resource
 		 * Hide the loading progress bar.
 		 * @return void
 		 */
-		public function hideLoadingBar():void {
+		private function hideLoadingBar():void {
 			if (this._loadingBar && this._loadingBar.parent) {
 				this._loadingBar.parent.removeChild(this._loadingBar);
 			}
@@ -348,11 +346,9 @@ package com.xenojoshua.af.resource
 			if (type == this._validTypes.swf
 				|| type == this._validTypes.font) {
 				this._loader.append(new SWFLoader(url, vars));
-			} else if (type == this._validTypes.xml
-				|| type == this._validTypes.json
-				|| type == this._validTypes.config) {
+			} else if (type == this._validTypes.config) {
 				this._loader.append(new DataLoader(url, vars));
-			} else {
+			} else if (type == this._validTypes.image) {
 				this._loader.append(new ImageLoader(url, vars));
 			}
 		}
@@ -368,10 +364,10 @@ package com.xenojoshua.af.resource
 			
 			if (config.type == this._validTypes.swf
 				|| config.type == this._validTypes.font) {
-				isLoaded = this.getSwfLoader(name) == null ? false : true;
+				isLoaded = XafSwfManager.instance.getSwfLoader(name) == null ? false : true;
 			} else if (config.type == this._validTypes.config) {
 				isLoaded = XafConfigManager.instance.loadConfigs(config.config) == null ? false : true;
-			} else {
+			} else if (config.type == this._validTypes.image) {
 				isLoaded = XafImageManager.instance.getImage(name) == null ? false : true;
 			}
 			
@@ -390,23 +386,23 @@ package com.xenojoshua.af.resource
 			for (var rsName:String in this._loadingList) {
 				if (this._loadingList[rsName] == this._validTypes.swf) {
 					// register swf resource
-					this.registerSwfLoader(rsName, this.getContentAsSwfLoader(rsName));
+					XafSwfManager.instance.registerSwfLoader(rsName, this.getContentAsSwfLoader(rsName));
 				} else if (this._loadingList[rsName] == this._validTypes.font) {
 					// register font resource
-					this.registerSwfLoader(rsName, this.getContentAsSwfLoader(rsName));
+					XafSwfManager.instance.registerSwfLoader(rsName, this.getContentAsSwfLoader(rsName));
 					for (var fontClassName:String in this._resources[rsName].font) {
 						XafFontManager.instance.registerFont(
 							this._resources[rsName].font[fontClassName],
 							fontClassName,
-							this.getClassDefInSwf(rsName, fontClassName)
+							XafSwfManager.instance.getClassDefInSwf(rsName, fontClassName)
 						);
 					}
 				} else if (this._loadingList[rsName] == this._validTypes.config) {
 					// register config resource
-					XafConfigManager.instance.registerConfigs(this._resources[rsName].config, this.getJSON(rsName));
+					XafConfigManager.instance.registerConfigs(this._resources[rsName].config, this.getContentAsJSON(rsName));
 				} else if (this._loadingList[rsName] == this._validTypes.image) {
 					// register image resource
-					XafImageManager.instance.registerImage(rsName, this.getImage(rsName));
+					XafImageManager.instance.registerImage(rsName, this.getContentAsImage(rsName));
 				}
 			}
 			
@@ -486,92 +482,21 @@ package com.xenojoshua.af.resource
 		//-* RESOURCE HANDLING APIS
 		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 		/**
-		 * Get class defined in the swf target.
-		 * @param String name the name of the SWFLoader
-		 * @param String className
-		 * @return Class cls
-		 */
-		public function getClassDefInSwf(name:String, className:String):Class {
-			var cls:Class = null;
-			
-			var loader:SWFLoader = this.getSwfLoader(name);
-			if (loader != null) {
-				cls = loader.getClass(className);
-			}
-			
-			return cls;
-		}
-		
-		/**
-		 * Get MovieClip instance in swf target.
-		 * @param String name the name of the SWFLoader
-		 * @param String className
-		 * @return MovieClip movie
-		 */
-		public function getMovieClipInSwf(name:String, className:String):MovieClip {
-			var movie:MovieClip = null;
-			
-			var cls:Class = this.getClassDefInSwf(name, className);
-			if (cls != null) {
-				movie = (new cls()) as MovieClip;
-			}
-			
-			return movie;
-		}
-		
-		/**
-		 * Get one SWFLoader from registered loader list if it exists, otherwise null returned.
-		 * @param String name the name of the SWFLoader
-		 * @return SWFLoader loader
-		 */
-		public function getSwfLoader(name:String):SWFLoader {
-			var loader:SWFLoader = null;
-			
-			if (this._swfLoaders.hasOwnProperty(name)) {
-				loader = this._swfLoaders[name];
-			} else {
-				XafConsole.instance.log(XafConsole.ERROR, 'XafRsManager: SWFLoader with name "' + name + '" not registered in the XafRsManager!');
-			}
-			
-			return loader;
-		}
-		
-		/**
-		 * Get XML from loader.
-		 * @param String name
-		 * @return XML xml
-		 */
-		public function getXML(name:String):XML {
-			return this._loader.getContent(XafUtil.getAbsoluteMediaUrl(this._resources[name].url)) as XML;
-		}
-		
-		/**
-		 * Get JSON from loader.
+		 * Get loaded content as JSON.
 		 * @param String name
 		 * @return Object json
 		 */
-		public function getJSON(name:String):Object {
+		private function getContentAsJSON(name:String):Object {
 			return JSON.parse(this._loader.getContent(XafUtil.getAbsoluteMediaUrl(this._resources[name].url)));
 		}
 		
 		/**
-		 * Get image from loader.
+		 * Get loaded content as image.
 		 * @param String name
 		 * @return DisplayObject image
 		 */
-		public function getImage(name:String):DisplayObject {
+		private function getContentAsImage(name:String):DisplayObject {
 			return this._loader.getContent(XafUtil.getAbsoluteMediaUrl(this._resources[name].url)) as DisplayObject;
-		}
-		
-		/**
-		 * Register one swf loader in loader list.
-		 * @param String name the name of the loader
-		 * @param SWFLoader loader
-		 * @return void
-		 */
-		private function registerSwfLoader(name:String, loader:SWFLoader):void {
-			this._swfLoaders[name] = loader;
-			XafConsole.instance.log(XafConsole.INFO, 'XafRsManager: SWF "' + name + '" registered!');
 		}
 		
 		/**

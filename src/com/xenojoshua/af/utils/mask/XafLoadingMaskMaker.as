@@ -1,9 +1,9 @@
 package com.xenojoshua.af.utils.mask
 {
-	import com.xenojoshua.af.resource.manager.XafConfigManager;
 	import com.xenojoshua.af.constant.XafConst;
-	import com.xenojoshua.af.resource.XafRsManager;
 	import com.xenojoshua.af.mvc.view.screen.XafScreenManager;
+	import com.xenojoshua.af.resource.manager.XafConfigManager;
+	import com.xenojoshua.af.resource.manager.XafSwfManager;
 	import com.xenojoshua.af.utils.console.XafConsole;
 	
 	import flash.display.MovieClip;
@@ -96,7 +96,7 @@ package com.xenojoshua.af.utils.mask
 			movie.graphics.drawRect(0, 0, XafConfigManager.instance.stageWidth, XafConfigManager.instance.stageHeight);
 			movie.graphics.endFill();
 			
-			var loadingMovie:MovieClip = XafRsManager.instance.getMovieClipInSwf(this._loadingSwfName, this._loadingClassName);
+			var loadingMovie:MovieClip = XafSwfManager.instance.getMovieClipInSwf(this._loadingSwfName, this._loadingClassName);
 			if (loadingMovie) {
 				loadingMovie.x = movie.width / 2;
 				loadingMovie.y = movie.height / 2;

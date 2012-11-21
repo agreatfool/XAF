@@ -1,5 +1,7 @@
 package com.xenojoshua.af.utils.time
 {
+	import flash.utils.getTimer;
+
 	public class XafTime
 	{
 		/**
@@ -61,6 +63,14 @@ package com.xenojoshua.af.utils.time
 			var d:String = XafTime.formatDateNumber((date.getDate()).toString());
 			
 			return Y + "-" + m + "-" + d;
+		}
+		
+		/**
+		 * Get the millisecond(s) after AVM start.
+		 * @return int time
+		 */
+		public static function getRelativeTimer():int {
+			return flash.utils.getTimer();
 		}
 		
 		/**

@@ -41,8 +41,8 @@ package com.xenojoshua.af.resource
 		 * XafRsManager.instance.initializeLoadingBar(movie, background, alpha); (If you want a loading bar)
 		 * XafRsManager.instance.registerResources(configs);
 		 * XafRsManager.instance.registerCompleteSignal(onComplete).registerErrorSignal(onError);
-		 * XafRsManager.instance.prepareLoading(['resourceA', 'resourceB', ...]).startLoading();
-		 * // XafRsManager.instance.loadPreloads(); // load preload items
+		 * XafRsManager.instance.prepareLoading(['resourceA', 'resourceB', ...]);
+		 * XafRsManager.instance.startLoading(); // XafRsManager.instance.loadPreloads(); // load preload items
 		 * 
 		 * ----------------------------------------------------------------
 		 * Note:
@@ -76,7 +76,6 @@ package com.xenojoshua.af.resource
 		public function XafRsManager() {
 			this.setLoaderVars(); // init loader vars
 			
-			this._swfLoaders     = new Object();
 			this._loadingList    = new Object();
 			this._resources      = new Object();
 			
@@ -87,7 +86,6 @@ package com.xenojoshua.af.resource
 		private var _loader:LoaderMax;   // used to handle loaded content after load action
 		private var _loaderVars:Object;  // LoaderMax vars
 		
-		private var _swfLoaders:Object;  // <name:String, loader:SWFLoader>
 		private var _loadingList:Object; // <name:String, type:String>
 		private var _validTypes:Object = {
 			swf:    'swf',
@@ -181,10 +179,11 @@ package com.xenojoshua.af.resource
 		 * @param MovieClip movie default null, loading bar animation
 		 * @param DisplayObject background default null, background image
 		 * @param Number alpha default 0.0, means background is transparent, background alpha value
-		 * @return void
+		 * @return XafRsManager 
 		 */
-		public function initializeLoadingBar(movie:MovieClip = null, background:DisplayObject = null, alpha:Number = 0.0):void {
+		public function initializeLoadingBar(movie:MovieClip = null, background:DisplayObject = null, alpha:Number = 0.0):XafRsManager {
 			this._loadingBar = new XafRsProgressBar(movie, background, alpha);
+			return this;
 		}
 		
 		/**
@@ -216,7 +215,7 @@ package com.xenojoshua.af.resource
 		 */
 		public function dispose():void {
 			// remove loading list
-			this._loadingList = null;
+			this._loadingList = {};
 			// remove signal actions
 			this._completeSignal.removeAll();
 			this._errorSignal.removeAll();
@@ -279,9 +278,11 @@ package com.xenojoshua.af.resource
 		
 		/**
 		 * Start loading.
-		 * @return void
+		 * @return Boolean isStarted since it's possible that all specified resources are all already loaded
 		 */
-		public function startLoading():void {
+		public function startLoading():Boolean {
+			var isThereAnyLoading:Boolean = false;
+			
 			if (this._loadingList) { // have items to load
 				if (!this._loader) {
 					this._loader = new LoaderMax(this._loaderVars);
@@ -297,14 +298,17 @@ package com.xenojoshua.af.resource
 					this.showLoadingBar();
 				}
 				this._loader.load();
+				isThereAnyLoading = true;
 			}
+			
+			return isThereAnyLoading;
 		}
 		
 		/**
 		 * Load resources defined as preload in "this._resources".
-		 * @return void
+		 * @return Boolean isStarted since it's possible that all specified resources are all already loaded
 		 */
-		public function loadPreloads():void {
+		public function loadPreloads():Boolean {
 			this._loadingList = new Array();
 			this._loader = new LoaderMax(this._loaderVars);
 			
@@ -327,6 +331,8 @@ package com.xenojoshua.af.resource
 				}
 				this._loader.load();
 			}
+			
+			return isThereAnyPreload;
 		}
 		
 		/**

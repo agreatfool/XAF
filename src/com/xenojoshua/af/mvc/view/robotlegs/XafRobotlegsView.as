@@ -298,7 +298,9 @@ package com.xenojoshua.af.mvc.view.robotlegs
 		 */
 		public function dispose():void {
 			// remove this view & it's mask
-			this.parent.removeChild(this);
+			if (this.parent) {
+				this.parent.removeChild(this);
+			}
 			if (this._hasBgMask) {
 				XafMaskMaker.instance.removeMask(this);
 			}

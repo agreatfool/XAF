@@ -50,6 +50,8 @@ package com.xenojoshua.af.resource
 		 * @return void
 		 */
 		public function dispose():void {
+			this._loader.removeEventListener(Event.COMPLETE,        this.onComplete);
+			this._loader.removeEventListener(IOErrorEvent.IO_ERROR, this.onError);
 			this._completeSignal.removeAll();
 			if (this._errorSignal) {
 				this._errorSignal.removeAll();

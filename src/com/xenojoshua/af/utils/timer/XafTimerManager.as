@@ -41,7 +41,7 @@ package com.xenojoshua.af.utils.timer
 		/**
 		 * Register one new timer.
 		 * @param String name
-		 * @param int delay
+		 * @param int delay as milliseconds
 		 * @param Function onTime
 		 * @param int repeatCount default 0
 		 * @param Function onComplete
@@ -70,7 +70,7 @@ package com.xenojoshua.af.utils.timer
 		 * @param String name
 		 * @return void
 		 */
-		public function destoryTimer(name:String):void {
+		public function removeTimer(name:String):void {
 			var timer:Timer = this._timers[name];
 			if (timer) {
 				timer.stop();

@@ -489,9 +489,9 @@ package com.xenojoshua.af.resource
 			if (!this._loaderVars) {
 				this._loaderVars = new Object();
 			}
-			this._loaderVars.onComplete     = (onSucceed == null)  ? this.onSucceed  : onSucceed;
+			this._loaderVars.onComplete     = (onSucceed == null)  ? this.onSucceed       : onSucceed;
 			this._loaderVars.onProgress     = (onProgress == null) ? this.onTotalProgress : onProgress;
-			this._loaderVars.onError        = (onError == null)    ? this.onError    : onError;
+			this._loaderVars.onError        = (onError == null)    ? this.onError         : onError;
 			this._loaderVars.name           = name;
 			this._loaderVars.auditSize      = auditSize;
 			this._loaderVars.maxConnections = maxConnections;

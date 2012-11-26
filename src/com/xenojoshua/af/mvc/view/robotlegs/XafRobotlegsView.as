@@ -4,6 +4,7 @@ package com.xenojoshua.af.mvc.view.robotlegs
 	import com.xenojoshua.af.utils.console.XafConsole;
 	import com.xenojoshua.af.utils.mask.XafMaskMaker;
 	
+	import flash.display.DisplayObjectContainer;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.events.IEventDispatcher;
@@ -290,6 +291,25 @@ package com.xenojoshua.af.mvc.view.robotlegs
 		}
 		
 		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+		//-* LAYER
+		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
+		/**
+		 * Remove all display children in DisplayObjectContainer.
+		 * @param DisplayObjectContainer container default null
+		 * @return void
+		 */
+		public function removeAllChildren(container:DisplayObjectContainer = null):void {
+			if (container == null) {
+				container = this;
+			}
+			if (container.numChildren) {
+				for (var index:int = 0; index < container.numChildren; ++index) {
+					container.removeChildAt(index);
+				}
+			}
+		}
+		
+		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 		//-* DISPOSE
 		//-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 		/**
@@ -305,49 +325,37 @@ package com.xenojoshua.af.mvc.view.robotlegs
 				XafMaskMaker.instance.removeMask(this);
 			}
 			// remove components
-			if (this._components) {
-				for (var componentName:String in this._components) {
-					var component:Object = this._components[componentName];
-					try {
-						component.dispose();
-					} catch (e:Error) {
-						if (1006 == e.errorID
-							|| 1069 == e.errorID) {
-							// do nothing for "method does not exist" exception
-						} else {
-							throw e;
-						}
+			for (var componentName:String in this._components) {
+				var component:Object = this._components[componentName];
+				try {
+					component.dispose();
+				} catch (e:Error) {
+					if (1006 == e.errorID
+						|| 1069 == e.errorID) {
+						// do nothing for "method does not exist" exception
+					} else {
+						throw e;
 					}
 				}
-				this._components = null;
 			}
+			this._components = null;
 			// remove signals
-			if (this._signals) {
-				for (var signalName:String in this._signals) {
-					this._signals[signalName].removeAll();
-				}
-				this._signals = null;
+			for (var signalName:String in this._signals) {
+				this._signals[signalName].removeAll();
 			}
+			this._signals = null;
 			// remove tabs
-			if (this._tabs) {
-				this._tabs = null;
-				this._currentTabName = null;
-				this._tabButtonClickFunc = null;
-			}
+			this._tabs = null;
+			this._currentTabName = null;
+			this._tabButtonClickFunc = null;
 			// remove buttons
-			if (this._buttons) {
-				for each (var button:XafButton in this._buttons) {
-					button.dispose();
-				}
-				this._buttons = null;
+			for each (var button:XafButton in this._buttons) {
+				button.dispose();
 			}
+			this._buttons = null;
 			// remove movies
-			if (this._movies) {
-				for (var index:int = 0; index < this.numChildren; ++index) {
-					this.removeChildAt(index);
-				}
-				this._movies = null;
-			}
+			this.removeAllChildren();
+			this._movies = null;
 		}
 	}
 }

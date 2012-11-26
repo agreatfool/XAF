@@ -80,6 +80,7 @@ package com.xenojoshua.af.resource
 			this._resources      = new Object();
 			
 			this._completeSignal = new Signal();
+			this._progressSignal = new Signal();
 			this._errorSignal    = new Signal();
 		}
 		
@@ -96,6 +97,7 @@ package com.xenojoshua.af.resource
 		private var _resources:Object;   // <name:String, config:Object>
 		
 		private var _completeSignal:Signal;
+		private var _progressSignal:Signal;
 		private var _errorSignal:Signal;
 		
 		private var _loadingBar:XafRsProgressBar;
@@ -218,6 +220,7 @@ package com.xenojoshua.af.resource
 			this._loadingList = {};
 			// remove signal actions
 			this._completeSignal.removeAll();
+			this._progressSignal.removeAll();
 			this._errorSignal.removeAll();
 			// remove loaded content & destory LoaderMax
 			if (this._loader) {
@@ -238,6 +241,16 @@ package com.xenojoshua.af.resource
 		 */
 		public function registerCompleteSignal(callback:Function):XafRsManager {
 			this._completeSignal.add(callback);
+			return this;
+		}
+		
+		/**
+		 * Register loading progress action.
+		 * @param Function callbackc
+		 * @return XafRsManager
+		 */
+		public function registerProgressSignal(callback:Function):XafRsManager {
+			this._progressSignal.add(callback);
 			return this;
 		}
 		
@@ -283,22 +296,22 @@ package com.xenojoshua.af.resource
 		public function startLoading():Boolean {
 			var isThereAnyLoading:Boolean = false;
 			
-			if (this._loadingList) { // have items to load
-				if (!this._loader) {
-					this._loader = new LoaderMax(this._loaderVars);
-				}
-				for (var rsName:String in this._loadingList) {
-					this.appendLoader(
-						XafUtil.getAbsoluteMediaUrl(this._resources[rsName].url),
-						this._resources[rsName].type,
-						this._resources[rsName].size
-					);
-				}
+			if (this._loader == null) {
+				this._loader = new LoaderMax(this._loaderVars);
+			}
+			for (var rsName:String in this._loadingList) {
+				isThereAnyLoading = true;
+				this.appendLoader(
+					XafUtil.getAbsoluteMediaUrl(this._resources[rsName].url),
+					this._resources[rsName].type,
+					this._resources[rsName].size
+				);
+			}
+			if (isThereAnyLoading) {
 				if (this._loadingBar) {
 					this.showLoadingBar();
 				}
 				this._loader.load();
-				isThereAnyLoading = true;
 			}
 			
 			return isThereAnyLoading;
@@ -435,6 +448,7 @@ package com.xenojoshua.af.resource
 				//trace('Total progress: loaded: ' + e.target.bytesLoaded + ', total: ' + e.target.bytesTotal); // this code can make loading bar a bit slow to be finished
 				this._loadingBar.updateProgressBar(e.target.bytesLoaded, e.target.bytesTotal);
 			}
+			this._progressSignal.dispatch([e.target.bytesLoaded, e.target.bytesTotal]);
 		}
 		
 		/**
